@@ -1,0 +1,87 @@
+networks:
+  no_internal:
+    internal: true
+  reverse_proxy:
+    internal: true
+  internet:
+
+services:
+  traefik:
+    image: "traefik:latest"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.web.address=:80"
+      - "--entryPoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=duckdns"
+      - "--certificatesresolvers.myresolver.acme.email=postmaster@${TRAEFIK_DOMAIN_NAME}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DUCKDNS_TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - reverse_proxy
+      - internet
+    labels:
+      traefik.enable: true
+
+      # Rule for port 8080 (traefik)
+      traefik.http.routers.traefik-router.rule: Host(`traefik.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.traefik-router.entrypoints: websecure
+      traefik.http.routers.traefik-router.service: traefik-service
+      traefik.http.routers.traefik-router.tls.certresolver: myresolver
+      traefik.http.services.traefik-service.loadbalancer.server.port: 8080
+      traefik.http.services.traefik-service.loadbalancer.server.scheme: http
+
+  vpn:
+    image: qmcgaw/gluetun
+    container_name: vpn
+    restart: always
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/gluetun:/gluetun
+    environment:
+      # See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup
+      - VPN_SERVICE_PROVIDER=nordvpn
+      - VPN_TYPE=wireguard
+      # Wireguard:
+      - WIREGUARD_PRIVATE_KEY=${NORDVPN_PRIVATE_KEY}
+      - SERVER_COUNTRIES=${VPN_SERVER_COUNTRY}
+      # Timezone for accurate log times
+      - TZ=${GENERAL_TIMEZONE}
+      # - FIREWALL_OUTBOUND_SUBNETS=${VPN_LOCAL_SUBNET_RANGE}
+    networks:
+      - reverse_proxy
+      - internet
+    labels:
+      traefik.enable: true
+
+      # Rule for port 5800 (firefox)
+      traefik.http.routers.firefox-router.rule: Host(`firefox.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.firefox-router.entrypoints: websecure
+      traefik.http.routers.firefox-router.service: firefox-service
+      traefik.http.routers.firefox-router.tls.certresolver: myresolver
+      traefik.http.services.firefox-service.loadbalancer.server.port: 5800
+      traefik.http.services.firefox-service.loadbalancer.server.scheme: http
+
+      # Rule for port 8090 (qbitorrent)
+      traefik.http.routers.qbitorrent-router.rule: Host(`qbitorrent.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.qbitorrent-router.entrypoints: websecure
+      traefik.http.routers.qbitorrent-router.service: qbitorrent-service
+      traefik.http.routers.qbitorrent-router.tls.certresolver: myresolver
+      traefik.http.services.qbitorrent-service.loadbalancer.server.port: 8090
+      traefik.http.services.qbitorrent-service.loadbalancer.server.scheme: http

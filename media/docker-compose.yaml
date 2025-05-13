@@ -1,0 +1,30 @@
+networks:
+  no_internal:
+    internal: true
+    external: true
+  reverse_proxy:
+    internal: true
+    external: true
+  internet:
+    external: true
+
+services:
+  firefox:
+    image: jlesage/firefox
+    container_name: firefox
+    restart: always
+    network_mode: container:vpn
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    restart: always
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=${GENERAL_TIMEZONE}
+      - WEBUI_PORT=8090
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/qbittorrent/configs:/config
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/qbittorrent/downloads:/downloads
+    network_mode: container:vpn
