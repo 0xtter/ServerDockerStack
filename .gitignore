@@ -1,3 +1,10 @@
 .env
 data/
-letsencrypt
+network/letsencrypt
+.cache
+other/config/homepage/config/logs
+other/config/homepage/icons
+other/config/homepage/images
+
+media/config/qbittorrent/qBittorrent/*
+!media/config/qbittorrent/qBittorrent/qBittorrent.conf

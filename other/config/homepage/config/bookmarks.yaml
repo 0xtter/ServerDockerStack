@@ -1,0 +1,51 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/en/configs/bookmarks
+
+- Developer:
+    - Github:
+        - icon: github-light.png
+          href: https://github.com/0xtter
+    - CyberChef:
+        - icon: cyberchef.png
+          href: https://gchq.github.io/CyberChef/
+
+- Social:
+    - Reddit:
+        - icon: reddit.png
+          href: https://reddit.com/
+    - Twitter:
+        - icon: twitter.png
+          href: https://twitter.com
+    - LinkedIn:
+        - icon: https://static.licdn.com/scds/common/u/images/logos/favicons/v1/favicon.ico
+          href: https://linkedin.com
+    - Messenger:
+        - icon: https://static.xx.fbcdn.net/rsrc.php/ym/r/YQbyhl59TWY.ico
+          href: https://messenger.com
+          
+- Entertainment:
+    - YouTube:
+        - icon: youtube.png
+          href: https://youtube.com/
+    - Spotify:
+        - icon: spotify.png
+          href: https://open.spotify.com
+    - Netflix:
+        - icon: https://cdn4.iconfinder.com/data/icons/logos-and-brands/512/227_Netflix_logo-512.png
+          href: https://Netflix.com/browse
+    - Twitch:
+        - icon: twitch.png
+          href: https://twitch.tv/
+
+- Useful:
+    - Gmail:
+        - icon: google.png
+          href: https://mail.google.com/mail/
+    - Amazon:
+        - icon: amazon.png
+          href: https://amazon.fr
+    - ChatGPT:
+        - icon: https://chat.openai.com/favicon-32x32.png
+          href: https://chat.openai.com/chat
+    

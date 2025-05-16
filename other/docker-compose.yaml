@@ -1,0 +1,32 @@
+networks:
+  reverse_proxy:
+    name: reverse_proxy
+    external: true
+  internet:
+    name: internet
+    external: true
+
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    restart: unless-stopped
+    volumes:
+      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/homepage/config:/app/config # Make sure your local config directory exists
+      - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations
+      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/homepage/images:/app/public/images # Background images
+      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/homepage/icons:/app/public/icons # Background images
+    environment:
+      - HOMEPAGE_ALLOWED_HOSTS=${TRAEFIK_DOMAIN_NAME}
+      - HOMEPAGE_VAR_BASE_DOMAIN_NAME=${TRAEFIK_DOMAIN_NAME}
+    networks:
+      - reverse_proxy
+      - internet
+    labels:
+      traefik.enable: true
+      traefik.http.routers.homepage-router.rule: Host(`${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.homepage-router.entrypoints: websecure
+      traefik.http.routers.homepage-router.service: homepage-service
+      traefik.http.routers.homepage-router.tls.certresolver: myresolver
+      traefik.http.services.homepage-service.loadbalancer.server.port: 3000
+      traefik.http.services.homepage-service.loadbalancer.server.scheme: http

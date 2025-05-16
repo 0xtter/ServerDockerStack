@@ -1,0 +1,74 @@
+
+- Media:
+    - Jellyfin:
+        icon: jellyfin.svg
+        href: https://jellyfin.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: jellyfin
+        description: Streaming client
+        target: _blank
+    - Plex:
+        icon: plex.svg
+        href: https://plex.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: plex
+        description: Streaming client
+        target: _blank
+    - Overseerr:
+        icon: overseerr.svg
+        href: https://overseerr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: overseerr
+        description: Choose your movies to download!
+        target: _blank
+
+- Download:
+    - QbitTorrent:
+        icon: qbittorrent.svg
+        href: https://qbittorrent.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: qbittorrent
+        description: torrent downloader
+        target: _blank
+    - YoutubeDL:
+        icon: youtube-dl.svg
+        href: https://youtube-dl.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: ytdl_material
+        description: Download videos from youtube
+        target: _blank
+        
+- Indexers:
+    - Radarr:
+        icon: radarr.svg
+        href: https://radarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: radarr
+        description: movie indexer
+        target: _blank
+    - Sonarr:
+        icon: sonarr.svg
+        href: https://sonarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: sonarr
+        description: series indexer
+        target: _blank
+    - Bazarr:
+        icon: bazarr.svg
+        href: https://bazarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: bazarr
+        description: subtitles downloader
+        target: _blank
+    - Prowlarr:
+        icon: prowlarr.svg
+        href: https://prowlarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: prowlarr
+        description: all in one indexer
+        target: _blank
+
+
+- HomeLab Administration:
+    - Portainer:
+        icon: portainer.svg
+        href: https://portainer.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        description: Docker management
+        target: _blank
+
+    - Traefik:
+        icon: traefik.svg
+        href: https://traefik.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        description: Reverse proxy
+        target: _blank
