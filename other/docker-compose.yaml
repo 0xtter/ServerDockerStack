@@ -30,3 +30,12 @@ services:
       traefik.http.routers.homepage-router.tls.certresolver: myresolver
       traefik.http.services.homepage-service.loadbalancer.server.port: 3000
       traefik.http.services.homepage-service.loadbalancer.server.scheme: http
+
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_CLEANUP: true
+    restart: unless-stopped
