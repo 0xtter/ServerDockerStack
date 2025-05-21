@@ -6,6 +6,66 @@ networks:
     name: internet
 
 services:
+  wireguard:
+    image: ghcr.io/wg-easy/wg-easy
+    container_name: wireguard
+    restart: unless-stopped
+    environment:
+      - WG_HOST=${WIREGUARD_PUBLIC_DOMAIN_NAME}
+      - PASSWORD_HASH=${WIREGUARD_UI_PASSWORD}
+      - WG_DEFAULT_DNS=${GENERAL_DNS_SERVER_ADDRESS}
+      - WG_DEFAULT_ADDRESS=${WIREGUARD_VPN_RANGE}
+      - WG_ALLOWED_IPS=${WIREGUARD_ALLOWED_IPS}
+      - UI_TRAFFIC_STATS=true
+      - UI_CHART_TYPE=2
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/wireguard:/etc/wireguard
+    ports:
+      - "51820:51820/udp"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1
+    networks:
+      - reverse_proxy
+      - internet
+    labels:
+      traefik.enable: true
+
+      # Rule for port 51821 (wireguard)
+      traefik.http.routers.wireguard-router.rule: Host(`wireguard.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.wireguard-router.entrypoints: websecure
+      traefik.http.routers.wireguard-router.service: wireguard-service
+      traefik.http.routers.wireguard-router.tls: true
+      traefik.http.services.wireguard-service.loadbalancer.server.port: 51821
+      traefik.http.services.wireguard-service.loadbalancer.server.scheme: http
+
+  adguard:  
+    image: adguard/adguardhome:latest
+    container_name: adguard
+    restart: unless-stopped
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    networks:
+      - reverse_proxy
+      - internet
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/adguard/work:/opt/adguardhome/work
+      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/adguard/confdir:/opt/adguardhome/conf
+    labels:
+      traefik.enable: true
+
+      # Rule for port 80 (adguard)
+      traefik.http.routers.adguard-router.rule: Host(`adguard.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.adguard-router.entrypoints: websecure
+      traefik.http.routers.adguard-router.service: adguard-service
+      traefik.http.routers.adguard-router.tls: true
+      traefik.http.services.adguard-service.loadbalancer.server.port: 80
+      traefik.http.services.adguard-service.loadbalancer.server.scheme: http
+
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
@@ -13,7 +73,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/portainer/data:/data
-    command: --admin-password '${PORTAINER_ADMIN_PASSWORD}'
+    command: --admin-password "${PORTAINER_ADMIN_PASSWORD}"
     networks:
       - reverse_proxy
     labels:
@@ -23,7 +83,7 @@ services:
       traefik.http.routers.portainer-router.rule: Host(`portainer.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.portainer-router.entrypoints: websecure
       traefik.http.routers.portainer-router.service: portainer-service
-      traefik.http.routers.portainer-router.tls.certresolver: myresolver
+      traefik.http.routers.portainer-router.tls: true
       traefik.http.services.portainer-service.loadbalancer.server.port: 9443
       traefik.http.services.portainer-service.loadbalancer.server.scheme: https
     
@@ -32,7 +92,7 @@ services:
     container_name: "traefik"
     restart: unless-stopped
     command:
-      - "--log.level=INFO"
+      - "--log.level=${TRAEFIK_LOG_LEVEL:-INFO}"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
@@ -42,13 +102,16 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
       - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=duckdns"
-      - --certificatesresolvers.cloudflare.acme.dnschallenge.resolvers[0]=1.1.1.1:53
-      - --certificatesresolvers.cloudflare.acme.dnschallenge.resolvers[1]=8.8.8.8:53
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.resolvers[0]=1.1.1.1:53"
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.resolvers[1]=8.8.8.8:53"
       - "--certificatesresolvers.myresolver.acme.email=postmaster@${TRAEFIK_DOMAIN_NAME}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      - "--certificatesResolvers.myresolver.acme.dnschallenge.propagation.delayBeforeChecks=120"
+      - "--certificatesResolvers.myresolver.acme.dnschallenge.propagation.delayBeforeChecks=60"
       - "--certificatesresolvers.myresolver.acme.dnschallenge.propagation.disableChecks=true"
       - "--serverstransport.insecureskipverify=true"
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
     ports:
       - "80:80"
       - "443:443"
@@ -63,11 +126,15 @@ services:
     labels:
       traefik.enable: true
 
+      traefik.http.routers.traefik-router.tls.domains[0].main: homelycookie.duckdns.org
+      traefik.http.routers.traefik-router.tls.domains[0].sans: "*.homelycookie.duckdns.org"
+
       # Rule for port 8080 (traefik)
       traefik.http.routers.traefik-router.rule: Host(`traefik.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.traefik-router.entrypoints: websecure
       traefik.http.routers.traefik-router.service: traefik-service
       traefik.http.routers.traefik-router.tls.certresolver: myresolver
+      traefik.http.routers.traefik-router.tls: true
       traefik.http.services.traefik-service.loadbalancer.server.port: 8080
       traefik.http.services.traefik-service.loadbalancer.server.scheme: http
 
@@ -101,7 +168,7 @@ services:
       traefik.http.routers.firefox-router.rule: Host(`firefox.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.firefox-router.entrypoints: websecure
       traefik.http.routers.firefox-router.service: firefox-service
-      traefik.http.routers.firefox-router.tls.certresolver: myresolver
+      traefik.http.routers.firefox-router.tls: true
       traefik.http.services.firefox-service.loadbalancer.server.port: 5800
       traefik.http.services.firefox-service.loadbalancer.server.scheme: http
 
@@ -109,7 +176,7 @@ services:
       traefik.http.routers.qbitorrent-router.rule: Host(`qbitorrent.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.qbitorrent-router.entrypoints: websecure
       traefik.http.routers.qbitorrent-router.service: qbitorrent-service
-      traefik.http.routers.qbitorrent-router.tls.certresolver: myresolver
+      traefik.http.routers.qbitorrent-router.tls: true
       traefik.http.services.qbitorrent-service.loadbalancer.server.port: 8090
       traefik.http.services.qbitorrent-service.loadbalancer.server.scheme: http
 
@@ -117,7 +184,7 @@ services:
       traefik.http.routers.prowlarr-router.rule: Host(`prowlarr.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.prowlarr-router.entrypoints: websecure
       traefik.http.routers.prowlarr-router.service: prowlarr-service
-      traefik.http.routers.prowlarr-router.tls.certresolver: myresolver
+      traefik.http.routers.prowlarr-router.tls: true
       traefik.http.services.prowlarr-service.loadbalancer.server.port: 9696
       traefik.http.services.prowlarr-service.loadbalancer.server.scheme: http
 
@@ -125,7 +192,7 @@ services:
       traefik.http.routers.radarr-router.rule: Host(`radarr.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.radarr-router.entrypoints: websecure
       traefik.http.routers.radarr-router.service: radarr-service
-      traefik.http.routers.radarr-router.tls.certresolver: myresolver
+      traefik.http.routers.radarr-router.tls: true
       traefik.http.services.radarr-service.loadbalancer.server.port: 7878
       traefik.http.services.radarr-service.loadbalancer.server.scheme: http
 
@@ -133,7 +200,7 @@ services:
       traefik.http.routers.sonarr-router.rule: Host(`sonarr.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.sonarr-router.entrypoints: websecure
       traefik.http.routers.sonarr-router.service: sonarr-service
-      traefik.http.routers.sonarr-router.tls.certresolver: myresolver
+      traefik.http.routers.sonarr-router.tls: true
       traefik.http.services.sonarr-service.loadbalancer.server.port: 8989
       traefik.http.services.sonarr-service.loadbalancer.server.scheme: http
 
@@ -141,7 +208,7 @@ services:
       traefik.http.routers.bazarr-router.rule: Host(`bazarr.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.bazarr-router.entrypoints: websecure
       traefik.http.routers.bazarr-router.service: bazarr-service
-      traefik.http.routers.bazarr-router.tls.certresolver: myresolver
+      traefik.http.routers.bazarr-router.tls: true
       traefik.http.services.bazarr-service.loadbalancer.server.port: 6767
       traefik.http.services.bazarr-service.loadbalancer.server.scheme: http
 
@@ -149,6 +216,6 @@ services:
       traefik.http.routers.youtube-dl-router.rule: Host(`youtube-dl.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.youtube-dl-router.entrypoints: websecure
       traefik.http.routers.youtube-dl-router.service: youtube-dl-service
-      traefik.http.routers.youtube-dl-router.tls.certresolver: myresolver
+      traefik.http.routers.youtube-dl-router.tls: true
       traefik.http.services.youtube-dl-service.loadbalancer.server.port: 17442
       traefik.http.services.youtube-dl-service.loadbalancer.server.scheme: http

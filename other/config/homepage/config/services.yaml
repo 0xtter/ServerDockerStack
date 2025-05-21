@@ -64,11 +64,27 @@
     - Portainer:
         icon: portainer.svg
         href: https://portainer.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: portainer
         description: Docker management
         target: _blank
 
     - Traefik:
         icon: traefik.svg
         href: https://traefik.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: traefik
         description: Reverse proxy
+        target: _blank
+
+    - Wireguard:
+        icon: wireguard.svg
+        href: https://wireguard.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: wireguard
+        description: VPN Server
+        target: _blank
+
+    - AdGuard:
+        icon: adguard-home.svg
+        href: https://adguard.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: adguard
+        description: DNS Server + ad blocker
         target: _blank
