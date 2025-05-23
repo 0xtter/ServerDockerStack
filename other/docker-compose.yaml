@@ -139,6 +139,7 @@ services:
       - ${GENERAL_BASE_DOCKER_FILES_PATH}/paperless/export:/usr/src/paperless/export
       - ${GENERAL_BASE_DOCKER_FILES_PATH}/paperless/consume:/usr/src/paperless/consume
     environment:
+      USERMAP_UID: 1000
       PAPERLESS_REDIS: redis://redis:6379
       PAPERLESS_DBENGINE: postgresql
       PAPERLESS_DBHOST: postgres

@@ -1,0 +1,53 @@
+loki.write "local" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
+
+discovery.docker "linux" {
+  host = "unix:///var/run/docker.sock"
+}
+
+// Define a relabeling rule to create a service name from the container name.
+discovery.relabel "logs_integrations_docker" {
+      targets = []
+  
+      rule {
+          source_labels = ["__meta_docker_container_name"]
+          regex = "/(.*)"
+          target_label = "service_name"
+      }
+
+  }
+
+// Configure a loki.source.docker component to collect logs from Docker containers.
+loki.source.docker "default" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.docker.linux.targets
+  labels     = {"platform" = "docker"}
+  relabel_rules = discovery.relabel.logs_integrations_docker.rules
+  forward_to = [loki.write.local.receiver]
+}
+
+
+local.file_match "linux_logs_scrape" {
+  path_targets = [{
+    // Target localhost for log collection
+    __address__ = "localhost",
+    // Collect standard system logs
+    __path__    = "/var/log/host_logs/{syslog,messages,*.log}",
+    // Add instance label with hostname
+    //instance    = constants.hostname,
+    // Add job label for logs
+    platform         = "host",
+  }]
+}
+
+
+// Collect logs from files for node_exporter
+loki.source.file "linux_logs" {
+  // Use targets defined in local.file_match
+  targets    = local.file_match.linux_logs_scrape.targets
+  // Send logs to the local Loki instance
+  forward_to = [loki.write.local.receiver]
+}

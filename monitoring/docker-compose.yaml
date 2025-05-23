@@ -1,0 +1,129 @@
+networks:
+  reverse_proxy:
+    name: reverse_proxy
+    external: true
+  internet:
+    name: internet
+    external: true
+  loki:
+    name: loki
+    internal: true
+  prometheus:
+    name: prometheus
+    internal: true
+
+services:
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    user: "0"
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/grafana:/var/lib/grafana
+    networks:
+      - reverse_proxy
+      - prometheus
+      - loki
+    labels:
+      traefik.enable: true
+
+      # Rule for port 3000 (grafana)
+      traefik.http.routers.grafana-router.rule: Host(`grafana.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.grafana-router.entrypoints: websecure
+      traefik.http.routers.grafana-router.service: grafana-service
+      traefik.http.routers.grafana-router.tls: true
+      traefik.http.services.grafana-service.loadbalancer.server.port: 3000
+      traefik.http.services.grafana-service.loadbalancer.server.scheme: http
+    
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/loki/config:/etc/loki
+      - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/logs/loki/chunks:/loki/chunks
+      - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/logs/loki/rules:/loki/rules
+    networks:
+      - loki
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    restart: unless-stopped
+    command: 'run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy'
+    volumes:
+      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/alloy/config:/etc/alloy
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/alloy/data:/var/lib/alloy/data
+      - /var/log:/var/log/host_logs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - reverse_proxy
+      - loki
+    labels:
+      traefik.enable: true
+
+      # Rule for port 12345 (alloy)
+      traefik.http.routers.alloy-router.rule: Host(`alloy.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.alloy-router.entrypoints: websecure
+      traefik.http.routers.alloy-router.service: alloy-service
+      traefik.http.routers.alloy-router.tls: true
+      traefik.http.services.alloy-service.loadbalancer.server.port: 12345
+      traefik.http.services.alloy-service.loadbalancer.server.scheme: http
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.51.0
+    container_name: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /run:/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    privileged: true
+    restart: unless-stopped
+    command: 
+      - --housekeeping_interval=30s
+      - --max_housekeeping_interval=35s
+      - --event_storage_event_limit=default=0
+      - --event_storage_age_limit=default=0
+      - --store_container_labels=false
+      - --global_housekeeping_interval=30s
+      - --event_storage_event_limit=default=0
+      - --event_storage_age_limit=default=0
+      - --disable_metrics=percpu,process,sched,tcp,udp,disk,diskIO,network # enable only the ones listed
+      - --docker_only # only show stats for docker containers
+      - --allow_dynamic_housekeeping=true
+      - --storage_duration=1m0s
+    networks:
+      - prometheus
+    
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    user: "0"
+    volumes:
+      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/prometheus/config:/etc/prometheus
+      - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/logs/prometheus/data:/prometheus
+    networks:
+      - prometheus
+      
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - prometheus
