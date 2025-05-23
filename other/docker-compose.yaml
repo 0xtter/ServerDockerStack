@@ -74,9 +74,14 @@ services:
       - 445:445
     volumes:
       - ${GENERAL_BASE_DOCKER_MEDIA_PATH}:/media
+      - ${GENERAL_BASE_DOCKER_FILES_PATH}:/files
+      - ${GENERAL_BASE_DOCKER_BACKUP_FOLDER}:/backup
     command: >
       -u "${SAMBA_USER1_USERNAME};${SAMBA_USER1_PASSWORD}"
+      -u "${SAMBA_USER2_USERNAME};${SAMBA_USER2_PASSWORD}"
       -s "media;/media;yes;no;no"
+      -s "files;/files;yes;no;no"
+      -s "backup;/backup;yes;no;no"
 
   stirling-pdf:
     image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
