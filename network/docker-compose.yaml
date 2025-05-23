@@ -21,7 +21,7 @@ services:
     volumes:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/wireguard:/etc/wireguard
     ports:
-      - "51820:51820/udp"
+      - "51820:51820/udp" # A mettre en var env
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -129,7 +129,7 @@ services:
     environment:
       - DUCKDNS_TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
     volumes:
-      - "./letsencrypt:/letsencrypt"
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/letsencrypt:/letsencrypt
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
       - reverse_proxy
