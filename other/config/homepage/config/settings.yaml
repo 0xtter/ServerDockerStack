@@ -22,11 +22,13 @@ quicklaunch:
   provider: google # google, duckduckgo, bing, baidu, brave or custom
 
 layout:
-  Download:
+  Media:
+    tab: HomeLab
+  Tools:
+    tab: HomeLab
+  Arr:
     tab: HomeLab
   HomeLab Administration:
     tab: HomeLab
-  Indexers:
-    tab: HomeLab
-  Media:
+  Download:
     tab: HomeLab

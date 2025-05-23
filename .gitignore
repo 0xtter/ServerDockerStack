@@ -1,5 +1,7 @@
 .env
 data/
+media/
+files/
 network/letsencrypt
 .cache
 other/config/homepage/config/logs

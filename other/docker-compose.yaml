@@ -5,6 +5,12 @@ networks:
   internet:
     name: internet
     external: true
+  redis:
+    name: redis
+    internal: true
+  postgres:
+    name: postgres
+    internal: true
 
 services:
   homepage:
@@ -39,3 +45,169 @@ services:
     environment:
       WATCHTOWER_CLEANUP: true
     restart: unless-stopped
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    restart: unless-stopped
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/uptime-kuma:/app/data
+    networks:
+      - reverse_proxy
+    labels:
+      traefik.enable: true
+
+      # Rule for port 3001 (uptime-kuma)
+      traefik.http.routers.uptime-kuma-router.rule: Host(`uptime-kuma.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.uptime-kuma-router.entrypoints: websecure
+      traefik.http.routers.uptime-kuma-router.service: uptime-kuma-service
+      traefik.http.routers.uptime-kuma-router.tls: true
+      traefik.http.services.uptime-kuma-service.loadbalancer.server.port: 3001
+      traefik.http.services.uptime-kuma-service.loadbalancer.server.scheme: http
+  
+  samba:
+    image: dperson/samba:latest
+    container_name: samba
+    restart: unless-stopped
+    ports:
+      - 139:139
+      - 445:445
+    volumes:
+      - ${GENERAL_BASE_DOCKER_MEDIA_PATH}:/media
+    command: >
+      -u "${SAMBA_USER1_USERNAME};${SAMBA_USER1_PASSWORD}"
+      -s "media;/media;yes;no;no"
+
+  stirling-pdf:
+    image: docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest
+    container_name: stirling-pdf
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/StirlingPDF/trainingData:/usr/share/tessdata # Required for extra OCR languages
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/StirlingPDF/extraConfigs:/configs
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/StirlingPDF/customFiles:/customFiles/
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/StirlingPDF/logs:/logs/
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/StirlingPDF/pipeline:/pipeline/
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - LANGS=${GENERAL_LANG}
+    networks:
+      - reverse_proxy
+    labels:
+      traefik.enable: true
+
+      # Rule for port 8080 (stirling-pdf)
+      traefik.http.routers.stirling-pdf-router.rule: Host(`stirling-pdf.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.stirling-pdf-router.entrypoints: websecure
+      traefik.http.routers.stirling-pdf-router.service: stirling-pdf-service
+      traefik.http.routers.stirling-pdf-router.tls: true
+      traefik.http.services.stirling-pdf-service.loadbalancer.server.port: 8080
+      traefik.http.services.stirling-pdf-service.loadbalancer.server.scheme: http
+
+  redis:
+    image: docker.io/library/redis:latest
+    container_name: redis
+    restart: unless-stopped
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/redis:/data
+    networks:
+      - redis
+
+  postgres:
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0
+    container_name: postgres
+    restart: unless-stopped
+    volumes:
+      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/postgres/init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh:ro
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_STORAGE_TYPE: 'HDD'
+    networks:
+      - postgres
+
+  paperless:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    container_name: paperless
+    restart: unless-stopped
+    depends_on:
+      - postgres
+      - redis
+    volumes:
+      - ${GENERAL_BASE_DOCKER_FILES_PATH}/paperless/data:/usr/src/paperless/data
+      - ${GENERAL_BASE_DOCKER_FILES_PATH}/paperless/media:/usr/src/paperless/media
+      - ${GENERAL_BASE_DOCKER_FILES_PATH}/paperless/export:/usr/src/paperless/export
+      - ${GENERAL_BASE_DOCKER_FILES_PATH}/paperless/consume:/usr/src/paperless/consume
+    environment:
+      PAPERLESS_REDIS: redis://redis:6379
+      PAPERLESS_DBENGINE: postgresql
+      PAPERLESS_DBHOST: postgres
+      PAPERLESS_DBUSER: ${POSTGRES_USER}
+      PAPERLESS_DBPASS: ${POSTGRES_PASSWORD}
+      PAPERLESS_DBNAME: paperless
+      PAPERLESS_URL: https://paperless.${TRAEFIK_DOMAIN_NAME}
+      PAPERLESS_TIME_ZONE: ${GENERAL_TIMEZONE}
+      PAPERLESS_OCR_LANGUAGE: ${PAPERLESS_LANGUAGE}
+      PAPERLESS_OCR_LANGUAGES: ${PAPERLESS_LANGUAGES}
+      PAPERLESS_SECRET_KEY: "8ka4lvi8I4mRarLVyrPEj8IKC4i1HVSs"
+      PAPERLESS_ADMIN_USER: ${PAPERLESS_ADMIN_USER}
+      PAPERLESS_ADMIN_PASSWORD: ${PAPERLESS_ADMIN_PASSWORD}
+    networks:
+      - reverse_proxy
+      - redis
+      - internet
+      - postgres
+    labels:
+      traefik.enable: true
+
+      # Rule for port 8000 (paperless)
+      traefik.http.routers.paperless-router.rule: Host(`paperless.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.paperless-router.entrypoints: websecure
+      traefik.http.routers.paperless-router.service: paperless-service
+      traefik.http.routers.paperless-router.tls: true
+      traefik.http.services.paperless-service.loadbalancer.server.port: 8000
+      traefik.http.services.paperless-service.loadbalancer.server.scheme: http
+
+  immich:
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    container_name: immich
+    restart: unless-stopped
+    volumes:
+      # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
+      - ${GENERAL_BASE_DOCKER_FILES_PATH}/immich:/usr/src/app/upload
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      TZ: ${GENERAL_TIMEZONE}
+      DB_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/immich
+      DB_PASSWORD: ${POSTGRES_USER}
+      DB_USERNAME: ${POSTGRES_PASSWORD}
+      DB_DATABASE_NAME: immich
+    depends_on:
+      - redis
+      - postgres
+    healthcheck:
+      disable: false
+    networks:
+      - reverse_proxy
+      - postgres
+      - redis
+      - internet
+    labels:
+      traefik.enable: true
+
+      # Rule for port 2283 (immich)
+      traefik.http.routers.immich-router.rule: Host(`immich.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.immich-router.entrypoints: websecure
+      traefik.http.routers.immich-router.service: immich-service
+      traefik.http.routers.immich-router.tls: true
+      traefik.http.services.immich-service.loadbalancer.server.port: 2283
+      traefik.http.services.immich-service.loadbalancer.server.scheme: http
+
+  immich-machine-learning:
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    container_name: immich_machine_learning
+    restart: unless-stopped
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}:/cache
+    healthcheck:
+      disable: false
