@@ -26,6 +26,7 @@ services:
       - loki
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
 
       # Rule for port 3000 (grafana)
       traefik.http.routers.grafana-router.rule: Host(`grafana.${TRAEFIK_DOMAIN_NAME}`)
@@ -63,6 +64,7 @@ services:
       - loki
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
 
       # Rule for port 12345 (alloy)
       traefik.http.routers.alloy-router.rule: Host(`alloy.${TRAEFIK_DOMAIN_NAME}`)

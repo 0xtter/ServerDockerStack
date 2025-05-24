@@ -47,6 +47,8 @@ services:
       - reverse_proxy
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
+      
       traefik.http.routers.plex-router.rule: Host(`plex.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.plex-router.entrypoints: websecure
       traefik.http.routers.plex-router.service: plex-service
@@ -72,6 +74,8 @@ services:
       - reverse_proxy
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
+      
       traefik.http.routers.jellyfin-router.rule: Host(`jellyfin.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.jellyfin-router.entrypoints: websecure
       traefik.http.routers.jellyfin-router.service: jellyfin-service
@@ -174,6 +178,8 @@ services:
       - reverse_proxy
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
+      
       traefik.http.routers.overseerr-router.rule: Host(`overseerr.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.overseerr-router.entrypoints: websecure
       traefik.http.routers.overseerr-router.service: overseerr-service

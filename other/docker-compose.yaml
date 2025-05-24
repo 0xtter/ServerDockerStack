@@ -30,6 +30,7 @@ services:
       - internet
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
       traefik.http.routers.homepage-router.rule: Host(`${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.homepage-router.entrypoints: websecure
       traefik.http.routers.homepage-router.service: homepage-service
@@ -56,6 +57,7 @@ services:
       - reverse_proxy
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
 
       # Rule for port 3001 (uptime-kuma)
       traefik.http.routers.uptime-kuma-router.rule: Host(`uptime-kuma.${TRAEFIK_DOMAIN_NAME}`)
@@ -75,7 +77,7 @@ services:
     volumes:
       - ${GENERAL_BASE_DOCKER_MEDIA_PATH}:/media
       - ${GENERAL_BASE_DOCKER_FILES_PATH}:/files
-      - ${GENERAL_BASE_DOCKER_BACKUP_FOLDER}:/backup
+      - ${GENERAL_BASE_DOCKER_BACKUP_PATH}:/backup
     command: >
       -u "${SAMBA_USER1_USERNAME};${SAMBA_USER1_PASSWORD}"
       -u "${SAMBA_USER2_USERNAME};${SAMBA_USER2_PASSWORD}"
@@ -99,6 +101,7 @@ services:
       - reverse_proxy
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
 
       # Rule for port 8080 (stirling-pdf)
       traefik.http.routers.stirling-pdf-router.rule: Host(`stirling-pdf.${TRAEFIK_DOMAIN_NAME}`)
@@ -165,6 +168,7 @@ services:
       - postgres
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
 
       # Rule for port 8000 (paperless)
       traefik.http.routers.paperless-router.rule: Host(`paperless.${TRAEFIK_DOMAIN_NAME}`)
@@ -200,6 +204,7 @@ services:
       - internet
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
 
       # Rule for port 2283 (immich)
       traefik.http.routers.immich-router.rule: Host(`immich.${TRAEFIK_DOMAIN_NAME}`)

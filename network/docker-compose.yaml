@@ -33,6 +33,7 @@ services:
       - internet
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
 
       # Rule for port 51821 (wireguard)
       traefik.http.routers.wireguard-router.rule: Host(`wireguard.${TRAEFIK_DOMAIN_NAME}`)
@@ -57,6 +58,7 @@ services:
       - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/adguard/confdir:/opt/adguardhome/conf
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
 
       # Rule for port 80 (adguard)
       traefik.http.routers.adguard-router.rule: Host(`adguard.${TRAEFIK_DOMAIN_NAME}`)
@@ -78,6 +80,7 @@ services:
       - reverse_proxy
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
 
       # Rule for port 9443 (portainer)
       traefik.http.routers.portainer-router.rule: Host(`portainer.${TRAEFIK_DOMAIN_NAME}`)
@@ -136,6 +139,7 @@ services:
       - internet
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
 
       traefik.http.routers.traefik-router.tls.domains[0].main: homelycookie.duckdns.org
       traefik.http.routers.traefik-router.tls.domains[0].sans: "*.homelycookie.duckdns.org"
@@ -174,6 +178,7 @@ services:
       - internet
     labels:
       traefik.enable: true
+      traefik.docker.network: reverse_proxy
 
       # Rule for port 5800 (firefox)
       traefik.http.routers.firefox-router.rule: Host(`firefox.${TRAEFIK_DOMAIN_NAME}`)
