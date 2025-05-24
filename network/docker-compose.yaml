@@ -189,13 +189,13 @@ services:
       traefik.http.services.firefox-service.loadbalancer.server.port: 5800
       traefik.http.services.firefox-service.loadbalancer.server.scheme: http
 
-      # Rule for port 8090 (qbitorrent)
-      traefik.http.routers.qbitorrent-router.rule: Host(`qbitorrent.${TRAEFIK_DOMAIN_NAME}`)
-      traefik.http.routers.qbitorrent-router.entrypoints: websecure
-      traefik.http.routers.qbitorrent-router.service: qbitorrent-service
-      traefik.http.routers.qbitorrent-router.tls: true
-      traefik.http.services.qbitorrent-service.loadbalancer.server.port: 8090
-      traefik.http.services.qbitorrent-service.loadbalancer.server.scheme: http
+      # Rule for port 8090 (qbittorrent)
+      traefik.http.routers.qbittorrent-router.rule: Host(`qbittorrent.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.qbittorrent-router.entrypoints: websecure
+      traefik.http.routers.qbittorrent-router.service: qbittorrent-service
+      traefik.http.routers.qbittorrent-router.tls: true
+      traefik.http.services.qbittorrent-service.loadbalancer.server.port: 8090
+      traefik.http.services.qbittorrent-service.loadbalancer.server.scheme: http
 
       # Rule for port 9696 (prowlarr)
       traefik.http.routers.prowlarr-router.rule: Host(`prowlarr.${TRAEFIK_DOMAIN_NAME}`)
