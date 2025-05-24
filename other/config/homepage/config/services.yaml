@@ -94,6 +94,13 @@
         description: Reverse proxy
         target: _blank
 
+    - Grafana:
+        icon: grafana.svg
+        href: https://grafana.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: grafana
+        description: Monitor your logs, metrics and more...
+        target: _blank
+
     - Wireguard:
         icon: wireguard.svg
         href: https://wireguard.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
