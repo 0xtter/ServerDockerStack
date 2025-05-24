@@ -172,7 +172,8 @@ services:
       - SERVER_COUNTRIES=${VPN_SERVER_COUNTRY}
       # Timezone for accurate log times
       - TZ=${GENERAL_TIMEZONE}
-      # - FIREWALL_OUTBOUND_SUBNETS=${VPN_LOCAL_SUBNET_RANGE}
+      - FIREWALL_OUTBOUND_SUBNETS=${VPN_LOCAL_SUBNET_RANGE}
+      - DOT=off
     networks:
       - reverse_proxy
       - internet
