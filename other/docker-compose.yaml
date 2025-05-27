@@ -217,7 +217,7 @@ services:
 
   immich-machine-learning:
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
-    container_name: immich_machine_learning
+    container_name: immich-machine-learning
     restart: unless-stopped
     networks:
       - internet
