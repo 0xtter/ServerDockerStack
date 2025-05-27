@@ -166,6 +166,7 @@ services:
       - redis
       - internet
       - postgres
+    mem_limit: 1g
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
@@ -218,6 +219,8 @@ services:
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
     container_name: immich_machine_learning
     restart: unless-stopped
+    networks:
+      - internet
     volumes:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}:/cache
     healthcheck:
