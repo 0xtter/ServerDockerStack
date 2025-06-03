@@ -34,7 +34,7 @@ services:
       traefik.http.routers.homepage-router.rule: Host(`${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.homepage-router.entrypoints: websecure
       traefik.http.routers.homepage-router.service: homepage-service
-      traefik.http.routers.homepage-router.tls.certresolver: myresolver
+      traefik.http.routers.homepage-router.tls: true
       traefik.http.services.homepage-service.loadbalancer.server.port: 3000
       traefik.http.services.homepage-service.loadbalancer.server.scheme: http
 

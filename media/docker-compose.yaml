@@ -53,7 +53,7 @@ services:
       traefik.http.routers.plex-router.rule: Host(`plex.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.plex-router.entrypoints: websecure
       traefik.http.routers.plex-router.service: plex-service
-      traefik.http.routers.plex-router.tls.certresolver: myresolver
+      traefik.http.routers.plex-router.tls: true
       traefik.http.services.plex-service.loadbalancer.server.port: 32400
       traefik.http.services.plex-service.loadbalancer.server.scheme: http
 
@@ -81,7 +81,7 @@ services:
       traefik.http.routers.jellyfin-router.rule: Host(`jellyfin.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.jellyfin-router.entrypoints: websecure
       traefik.http.routers.jellyfin-router.service: jellyfin-service
-      traefik.http.routers.jellyfin-router.tls.certresolver: myresolver
+      traefik.http.routers.jellyfin-router.tls: true
       traefik.http.services.jellyfin-service.loadbalancer.server.port: 8096
       traefik.http.services.jellyfin-service.loadbalancer.server.scheme: http
 
@@ -178,6 +178,7 @@ services:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/overseerr/config:/config
     networks:
       - reverse_proxy
+      - internet
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
@@ -185,6 +186,6 @@ services:
       traefik.http.routers.overseerr-router.rule: Host(`overseerr.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.overseerr-router.entrypoints: websecure
       traefik.http.routers.overseerr-router.service: overseerr-service
-      traefik.http.routers.overseerr-router.tls.certresolver: myresolver
+      traefik.http.routers.overseerr-router.tls: true
       traefik.http.services.overseerr-service.loadbalancer.server.port: 5055
       traefik.http.services.overseerr-service.loadbalancer.server.scheme: http

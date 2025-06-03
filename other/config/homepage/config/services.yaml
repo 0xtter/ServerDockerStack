@@ -78,6 +78,12 @@
         container: immich
         description: Photos storage
         target: _blank
+    - Firefox:
+        icon: firefox.svg
+        href: https://firefox.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: firefox
+        description: Web browser behind a vpn
+        target: _blank
 
 - HomeLab Administration:
     - Portainer:
