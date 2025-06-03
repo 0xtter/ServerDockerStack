@@ -22,6 +22,12 @@ docker compose -f monitoring/docker-compose.yaml --env-file .env up -d
 docker compose -f media/docker-compose.yaml --env-file .env up -d
 ```
 
+Or run it all! :
+
+```bash
+find . -name "docker-compose.yaml" -exec docker compose -f {} --env-file .env up -d \;
+```
+
 ---
 
 To update a compose, run :
