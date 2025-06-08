@@ -43,6 +43,8 @@ services:
       - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/movies:/movies
       - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/series:/series
       - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/youtube:/youtube
+    ports:
+      - 32400:32400
     networks:
       - reverse_proxy
       - internet
