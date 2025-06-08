@@ -148,7 +148,6 @@ services:
       traefik.http.routers.traefik-router.rule: Host(`traefik.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.traefik-router.entrypoints: websecure
       traefik.http.routers.traefik-router.service: traefik-service
-      traefik.http.routers.traefik-router.tls.certresolver: myresolver
       traefik.http.routers.traefik-router.tls: true
       traefik.http.services.traefik-service.loadbalancer.server.port: 8080
       traefik.http.services.traefik-service.loadbalancer.server.scheme: http
@@ -173,6 +172,7 @@ services:
       # Timezone for accurate log times
       - TZ=${GENERAL_TIMEZONE}
       - FIREWALL_OUTBOUND_SUBNETS=${VPN_LOCAL_SUBNET_RANGE}
+      - DOT=off
     networks:
       - reverse_proxy
       - internet
