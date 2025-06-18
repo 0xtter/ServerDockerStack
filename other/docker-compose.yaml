@@ -222,6 +222,6 @@ services:
     networks:
       - internet
     volumes:
-      - ${GENERAL_BASE_DOCKER_DATA_PATH}:/cache
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/immich/cache:/cache
     healthcheck:
       disable: false
