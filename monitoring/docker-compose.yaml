@@ -138,8 +138,8 @@ services:
       - PUID=${VSCODE_UID}
       - PGID=${VSCODE_GID}
       - TZ=Europe/Paris
-      - PASSWORD= ${VSCODE_PASSWORD} #optional
-      - SUDO_PASSWORD= ${VSCODE_SUDO_PASSWORD} #optional
+      - PASSWORD=${VSCODE_PASSWORD} #optional
+      - SUDO_PASSWORD=${VSCODE_SUDO_PASSWORD} #optional
       - PROXY_DOMAIN=https://vscode.${TRAEFIK_DOMAIN_NAME} #optional
       - DEFAULT_WORKSPACE=/mounted/${VSCODE_DEFAULT_WORKSPACE} #optional
     volumes:
@@ -160,7 +160,7 @@ services:
       traefik.http.routers.vscode-router.tls: true
       traefik.http.services.vscode-service.loadbalancer.server.port: 8443
       traefik.http.services.vscode-service.loadbalancer.server.scheme: http
-      
+
   uptime-kuma:
     image: louislam/uptime-kuma:1
     container_name: uptime-kuma
