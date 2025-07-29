@@ -15,7 +15,8 @@ services:
       - PASSWORD_HASH=${WIREGUARD_UI_PASSWORD}
       - WG_DEFAULT_DNS=${GENERAL_DNS_SERVER_ADDRESS}
       - WG_DEFAULT_ADDRESS=${WIREGUARD_VPN_RANGE}
-      - WG_ALLOWED_IPS=${WIREGUARD_ALLOWED_IPS}
+      - WG_ALLOWED_IPS=${WIREGUARD_ALLOWED_IPS},${GENERAL_DNS_SERVER_ADDRESS}/32
+      - WG_DEVICE=${WIREGUARD_DEVICE}
       - UI_TRAFFIC_STATS=true
       - UI_CHART_TYPE=2
     volumes:
@@ -50,6 +51,7 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
+      - 3000:3000 # Comment when setup is done
     networks:
       - reverse_proxy
       - internet
