@@ -129,3 +129,34 @@ services:
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
     networks:
       - prometheus
+
+  code-server:
+    image: lscr.io/linuxserver/code-server:latest
+    hostname: code-server
+    container_name: code-server
+    environment:
+      - PUID=${VSCODE_UID}
+      - PGID=${VSCODE_GID}
+      - TZ=Europe/Paris
+      - PASSWORD= ${VSCODE_PASSWORD} #optional
+      - SUDO_PASSWORD= ${VSCODE_SUDO_PASSWORD} #optional
+      - PROXY_DOMAIN=https://vscode.${TRAEFIK_DOMAIN_NAME} #optional
+      - DEFAULT_WORKSPACE=/mounted/${VSCODE_DEFAULT_WORKSPACE} #optional
+    volumes:
+      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/vscode/:/config
+      - ${VSCODE_DEFAULT_WORKSPACE}:/mounted/${VSCODE_DEFAULT_WORKSPACE}
+    restart: unless-stopped
+    networks:
+      - reverse_proxy
+      - internet
+    labels:
+      traefik.enable: true
+      traefik.docker.network: reverse_proxy
+
+      # Rule for port 8443 (vscode)
+      traefik.http.routers.vscode-router.rule: Host(`vscode.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.vscode-router.entrypoints: websecure
+      traefik.http.routers.vscode-router.service: vscode-service
+      traefik.http.routers.vscode-router.tls: true
+      traefik.http.services.vscode-service.loadbalancer.server.port: 8443
+      traefik.http.services.vscode-service.loadbalancer.server.scheme: http
