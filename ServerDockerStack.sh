@@ -27,12 +27,16 @@ if [[ ! -d "$PROJECT_DIR" ]]; then
     exit 1
 fi
 
-# Function to run docker compose command in a subfolder
+# Function to run docker compose in a given folder
 run_compose() {
     local folder="$1"
     if [[ -f "$folder/docker-compose.yaml" ]]; then
         echo "Running docker compose $ACTION in $folder"
-        docker compose --env-file "$ENV_FILE" -f "$folder/docker-compose.yaml" $ACTION -d
+        if [[ "$ACTION" == "up" ]]; then
+            docker compose --env-file "$ENV_FILE" -f "$folder/docker-compose.yaml" up -d
+        else
+            docker compose --env-file "$ENV_FILE" -f "$folder/docker-compose.yaml" down
+        fi
     else
         echo "No docker-compose.yaml in $folder, skipping."
     fi
