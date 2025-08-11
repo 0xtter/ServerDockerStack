@@ -2,8 +2,12 @@ networks:
   reverse_proxy:
     name: reverse_proxy
     internal: true
+    driver_opts:
+      com.docker.network.endpoint.ifname: eth1
   internet:
     name: internet
+    driver_opts:
+      com.docker.network.endpoint.ifname: eth0 # Fix wg-easy see https://github.com/wg-easy/wg-easy/issues/1795
 
 services:
   wireguard:
