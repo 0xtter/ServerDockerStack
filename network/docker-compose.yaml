@@ -97,8 +97,8 @@ services:
     container_name: duckdns
     restart: unless-stopped
     environment:
-      - PUID=1000
-      - PGID=1000
+      - PUID=${USER_UID}
+      - PGID=${USER_GID}
       - TZ=${GENERAL_TIMEZONE}
       - SUBDOMAINS=${WIREGUARD_PUBLIC_DOMAIN_NAME}
       - TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
