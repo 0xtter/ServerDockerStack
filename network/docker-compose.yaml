@@ -6,12 +6,14 @@ networks:
       com.docker.network.endpoint.ifname: eth1
   internet:
     name: internet
+    driver: bridge
+    enable_ipv6: true
     driver_opts:
       com.docker.network.endpoint.ifname: eth0 # Fix wg-easy see https://github.com/wg-easy/wg-easy/issues/1795
 
 services:
   wireguard:
-    image: ghcr.io/wg-easy/wg-easy
+    image: ghcr.io/wg-easy/wg-easy:15
     container_name: wireguard
     restart: unless-stopped
     environment:
@@ -20,11 +22,12 @@ services:
       - WG_DEFAULT_DNS=${GENERAL_DNS_SERVER_ADDRESS}
       - WG_DEFAULT_ADDRESS=${WIREGUARD_VPN_RANGE}
       - WG_ALLOWED_IPS=${WIREGUARD_ALLOWED_IPS},${GENERAL_DNS_SERVER_ADDRESS}/32
-      - WG_DEVICE=${WIREGUARD_DEVICE}
+      - WG_DEVICE=eth0
       - UI_TRAFFIC_STATS=true
       - UI_CHART_TYPE=2
     volumes:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/wireguard:/etc/wireguard
+      - /lib/modules:/lib/modules:ro
     ports:
       - "51820:51820/udp" # A mettre en var env
     cap_add:
@@ -37,8 +40,14 @@ services:
       - net.ipv6.conf.all.forwarding=1
       - net.ipv6.conf.default.forwarding=1
     networks:
-      - reverse_proxy
-      - internet
+      reverse_proxy:
+        driver_opts:
+          com.docker.network.endpoint.ifname: eth1
+      internet:
+        driver_opts:
+          com.docker.network.endpoint.ifname: eth0
+        ipv4_address: 10.42.42.42
+        ipv6_address: fdcc:ad94:bacf:61a3::2a
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
