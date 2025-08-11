@@ -11,7 +11,7 @@ networks:
 
 services:
   wireguard:
-    image: ghcr.io/wg-easy/wg-easy:15
+    image: ghcr.io/wg-easy/wg-easy
     container_name: wireguard
     restart: unless-stopped
     environment:
@@ -25,7 +25,6 @@ services:
       - UI_CHART_TYPE=2
     volumes:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/wireguard:/etc/wireguard
-      - /lib/modules:/lib/modules:ro
     ports:
       - "51820:51820/udp" # A mettre en var env
     cap_add:
