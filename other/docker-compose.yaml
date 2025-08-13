@@ -62,8 +62,8 @@ services:
       - ${GENERAL_BASE_DOCKER_FILES_PATH}:/files
       - ${GENERAL_BASE_DOCKER_BACKUP_PATH}:/backup
     command: >
-      -u "${SAMBA_USER1_USERNAME};${SAMBA_USER1_PASSWORD};${SAMBA_USER1_CONFIG}"
-      -u "${SAMBA_USER2_USERNAME};${SAMBA_USER2_PASSWORD};${SAMBA_USER2_CONFIG}"
+      -u "${SAMBA_USER1_USERNAME};${SAMBA_USER1_PASSWORD}"
+      -u "${SAMBA_USER2_USERNAME};${SAMBA_USER2_PASSWORD}"
       -s "media;/media;yes;no;no"
       -s "files;/files;yes;no;no"
       -s "backup;/backup;yes;no;no"
