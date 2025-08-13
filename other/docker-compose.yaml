@@ -54,13 +54,16 @@ services:
     ports:
       - 139:139
       - 445:445
+    environment:
+      - USERID=${USER_UID}
+      - GROUPID=${USER_GID}
     volumes:
       - ${GENERAL_BASE_DOCKER_MEDIA_PATH}:/media
       - ${GENERAL_BASE_DOCKER_FILES_PATH}:/files
       - ${GENERAL_BASE_DOCKER_BACKUP_PATH}:/backup
     command: >
-      -u "${SAMBA_USER1_USERNAME};${SAMBA_USER1_PASSWORD}"
-      -u "${SAMBA_USER2_USERNAME};${SAMBA_USER2_PASSWORD}"
+      -u "${SAMBA_USER1_USERNAME};${SAMBA_USER1_PASSWORD};${SAMBA_USER1_CONFIG}"
+      -u "${SAMBA_USER2_USERNAME};${SAMBA_USER2_PASSWORD};${SAMBA_USER2_CONFIG}"
       -s "media;/media;yes;no;no"
       -s "files;/files;yes;no;no"
       -s "backup;/backup;yes;no;no"
