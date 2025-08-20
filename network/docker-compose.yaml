@@ -23,24 +23,26 @@ services:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/wireguard:/etc/wireguard
     ports:
       - "51820:51820/udp" # A mettre en var env
-      - "51821:51821/tcp" # A mettre en var env
+      # - "51821:51821/tcp" # A mettre en var env
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
     sysctls:
       - net.ipv4.ip_forward=1
       - net.ipv4.conf.all.src_valid_mark=1
+    networks:
+      - internet
     labels:
       traefik.enable: true
+      traefik.docker.network: internet
 
       # Wireguard Web UI
       traefik.http.routers.wireguard-router.rule: Host(`wireguard.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.wireguard-router.entrypoints: websecure
       traefik.http.routers.wireguard-router.service: wireguard-service
       traefik.http.routers.wireguard-router.tls: true
-
-      # Service points to host port 51821
-      traefik.http.services.wireguard-service.loadbalancer.server.url: "http://wireguard.${TRAEFIK_DOMAIN_NAME}:51821"
+      traefik.http.services.wireguard-service.loadbalancer.server.port: 51821
+      traefik.http.services.wireguard-service.loadbalancer.server.scheme: http
 
   adguard:  
     image: adguard/adguardhome:latest
