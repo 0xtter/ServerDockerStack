@@ -30,19 +30,17 @@ services:
     sysctls:
       - net.ipv4.ip_forward=1
       - net.ipv4.conf.all.src_valid_mark=1
-    networks:
-      - internet
     labels:
       traefik.enable: true
-      traefik.docker.network: internet
 
       # Wireguard Web UI
       traefik.http.routers.wireguard-router.rule: Host(`wireguard.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.wireguard-router.entrypoints: websecure
       traefik.http.routers.wireguard-router.service: wireguard-service
       traefik.http.routers.wireguard-router.tls: true
-      traefik.http.services.wireguard-service.loadbalancer.server.port: 51821
-      traefik.http.services.wireguard-service.loadbalancer.server.scheme: http
+
+      # Service points to host port 51821
+      traefik.http.services.wireguard-service.loadbalancer.server.url: "http://wireguard:51821"
 
   adguard:  
     image: adguard/adguardhome:latest
