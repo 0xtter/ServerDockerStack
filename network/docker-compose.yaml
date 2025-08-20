@@ -40,8 +40,6 @@ services:
       traefik.http.routers.wireguard-router.tls: true
 
       # Service points to host port 51821
-      traefik.http.services.wireguard-service.loadbalancer.server.port: 51821
-      traefik.http.services.wireguard-service.loadbalancer.server.scheme: http
       traefik.http.services.wireguard-service.loadbalancer.server.url: "http://wireguard.${TRAEFIK_DOMAIN_NAME}:51821"
 
   adguard:  
