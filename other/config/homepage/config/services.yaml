@@ -109,7 +109,7 @@
 
     - Wireguard:
         icon: wireguard.svg
-        href: https://wireguard.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        href: http://wireguard.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}:51821 # To adapt after fixing
         container: wireguard
         description: VPN Server
         target: _blank
