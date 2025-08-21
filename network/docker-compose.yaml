@@ -140,7 +140,7 @@ services:
     networks:
       - reverse_proxy
       - internet
-      - lan
+      # - lan
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
