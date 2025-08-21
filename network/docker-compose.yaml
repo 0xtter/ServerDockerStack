@@ -4,9 +4,6 @@ networks:
     internal: true
   internet:
     name: internet
-  lan:
-    external: true
-    name: bridge   # or create a custom bridge network
 
 services:
   wireguard:
@@ -43,7 +40,7 @@ services:
       traefik.http.routers.wireguard-router.tls: true
 
       # Service points to host port 51821
-      traefik.http.services.wireguard-service.loadbalancer.server.url: "http://wireguard:51821"
+      traefik.http.services.wireguard-service.loadbalancer.server.url: "http://self:51821"
 
   adguard:  
     image: adguard/adguardhome:latest
@@ -140,7 +137,8 @@ services:
     networks:
       - reverse_proxy
       - internet
-      # - lan
+    extra_hosts:
+      - "self:${GENERAL_DNS_SERVER_ADDRESS}"
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
