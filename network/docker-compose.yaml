@@ -4,6 +4,9 @@ networks:
     internal: true
   internet:
     name: internet
+  lan:
+    external: true
+    name: bridge   # or create a custom bridge network
 
 services:
   wireguard:
@@ -137,6 +140,7 @@ services:
     networks:
       - reverse_proxy
       - internet
+      - lan
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
