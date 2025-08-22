@@ -43,7 +43,7 @@ services:
     restart: unless-stopped
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
-      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/loki/config:/etc/loki
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/loki/config:/etc/loki:ro
       - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/logs/loki/chunks:/loki/chunks
       - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/logs/loki/rules:/loki/rules
     networks:
@@ -55,7 +55,7 @@ services:
     restart: unless-stopped
     command: 'run --server.http.listen-addr=0.0.0.0:12345 --storage.path=/var/lib/alloy/data /etc/alloy/config.alloy'
     volumes:
-      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/alloy/config:/etc/alloy
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/alloy/config:/etc/alloy:ro
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/alloy/data:/var/lib/alloy/data
       - /var/log:/var/log/host_logs
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -109,7 +109,7 @@ services:
     restart: unless-stopped
     user: "0"
     volumes:
-      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/prometheus/config:/etc/prometheus
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/prometheus/config:/etc/prometheus:ro
       - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/logs/prometheus/data:/prometheus
     networks:
       - prometheus
