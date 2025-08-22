@@ -18,8 +18,14 @@ services:
     container_name: homepage
     restart: unless-stopped
     volumes:
-      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/homepage/logs:/app/config/logs # Background images
-      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config:/app/config:ro # Make sure your local config directory exists
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/bookmarks.yaml:/app/config/bookmarks.yaml:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/custom.css:/app/config/custom.css:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/custom.js:/app/config/custom.js:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/docker.yaml:/app/config/docker.yaml:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/kubernetes.yaml:/app/config/kubernetes.yaml:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/services.yaml:/app/config/services.yaml:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/settings.yaml:/app/config/settings.yaml:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/widgets.yaml:/app/config/widgets.yaml:ro
       - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations
       - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/images:/app/public/images:ro # Background images
       - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/icons:/app/public/icons:ro # Background images
