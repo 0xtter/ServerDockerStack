@@ -18,10 +18,10 @@ services:
     container_name: homepage
     restart: unless-stopped
     volumes:
-      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/homepage/config:/app/config # Make sure your local config directory exists
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config:/app/config # Make sure your local config directory exists
       - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations
-      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/homepage/images:/app/public/images # Background images
-      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/homepage/icons:/app/public/icons # Background images
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/images:/app/public/images # Background images
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/icons:/app/public/icons # Background images
     environment:
       - HOMEPAGE_ALLOWED_HOSTS=${TRAEFIK_DOMAIN_NAME}
       - HOMEPAGE_VAR_BASE_DOMAIN_NAME=${TRAEFIK_DOMAIN_NAME}
@@ -108,7 +108,7 @@ services:
     container_name: postgres
     restart: unless-stopped
     volumes:
-      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/postgres/init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/postgres/init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh:ro
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
