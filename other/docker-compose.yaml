@@ -18,6 +18,7 @@ services:
     container_name: homepage
     restart: unless-stopped
     volumes:
+      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/homepage/logs:/app/config/logs # Background images
       - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config:/app/config:ro # Make sure your local config directory exists
       - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations
       - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/images:/app/public/images:ro # Background images
