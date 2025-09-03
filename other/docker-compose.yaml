@@ -46,7 +46,7 @@ services:
       traefik.http.services.homepage-service.loadbalancer.server.scheme: http
 
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower:1.7.1
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -102,7 +102,7 @@ services:
       traefik.http.services.stirling-pdf-service.loadbalancer.server.scheme: http
 
   redis:
-    image: docker.io/library/redis:latest
+    image: docker.io/library/redis:8.2.1
     container_name: redis
     restart: unless-stopped
     volumes:
@@ -125,7 +125,7 @@ services:
       - postgres
 
   paperless:
-    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.18.3
     container_name: paperless
     restart: unless-stopped
     depends_on:
@@ -170,7 +170,7 @@ services:
       traefik.http.services.paperless-service.loadbalancer.server.scheme: http
 
   immich:
-    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-server:1.140.1
     container_name: immich
     restart: unless-stopped
     volumes:
@@ -206,7 +206,7 @@ services:
       traefik.http.services.immich-service.loadbalancer.server.scheme: http
 
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-machine-learning:1.140.1
     container_name: immich-machine-learning
     restart: unless-stopped
     networks:

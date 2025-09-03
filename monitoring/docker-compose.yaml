@@ -14,7 +14,7 @@ networks:
 
 services:
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:latest
     container_name: grafana
     restart: unless-stopped
     user: "0"
@@ -75,7 +75,7 @@ services:
       traefik.http.services.alloy-service.loadbalancer.server.scheme: http
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.51.0
+    image: gcr.io/cadvisor/cadvisor:latest
     container_name: cadvisor
     volumes:
       - /:/rootfs:ro
@@ -162,7 +162,7 @@ services:
       traefik.http.services.vscode-service.loadbalancer.server.scheme: http
 
   uptime-kuma:
-    image: louislam/uptime-kuma:1
+    image: louislam/uptime-kuma:latest
     container_name: uptime-kuma
     restart: unless-stopped
     volumes:

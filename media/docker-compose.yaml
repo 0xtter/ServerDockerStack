@@ -8,7 +8,7 @@ networks:
 
 services:
   firefox:
-    image: jlesage/firefox
+    image: jlesage/firefox:latest
     container_name: firefox
     restart: unless-stopped
     network_mode: container:vpn

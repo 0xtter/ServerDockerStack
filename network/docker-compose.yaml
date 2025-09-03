@@ -7,7 +7,7 @@ networks:
 
 services:
   wireguard:
-    image: ghcr.io/wg-easy/wg-easy
+    image: ghcr.io/wg-easy/wg-easy:14
     container_name: wireguard
     restart: unless-stopped
     environment:
@@ -43,7 +43,7 @@ services:
       traefik.http.services.wireguard-service.loadbalancer.server.url: "http://wireguard:51821"
 
   adguard:  
-    image: adguard/adguardhome:latest
+    image: adguard/adguardhome:v0.107.65
     container_name: adguard
     restart: unless-stopped
     ports:
@@ -102,7 +102,7 @@ services:
       - TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
 
   traefik:
-    image: "traefik:latest"
+    image: traefik:v3.5
     container_name: "traefik"
     restart: unless-stopped
     command:
@@ -153,7 +153,7 @@ services:
       traefik.http.services.traefik-service.loadbalancer.server.scheme: http
 
   vpn:
-    image: qmcgaw/gluetun
+    image: qmcgaw/gluetun:latest
     container_name: vpn
     restart: unless-stopped
     cap_add:

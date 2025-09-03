@@ -1,6 +1,5 @@
 .env*
 data/
-media/
 files/
 network/letsencrypt
 .cache
