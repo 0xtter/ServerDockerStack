@@ -141,8 +141,8 @@ services:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
 
-      traefik.http.routers.traefik-router.tls.domains[0].main: homelycookie.duckdns.org
-      traefik.http.routers.traefik-router.tls.domains[0].sans: "*.homelycookie.duckdns.org"
+      traefik.http.routers.traefik-router.tls.domains[0].main: "${TRAEFIK_DOMAIN_NAME}"
+      traefik.http.routers.traefik-router.tls.domains[0].sans: "*.${TRAEFIK_DOMAIN_NAME}"
 
       # Rule for port 8080 (traefik)
       traefik.http.routers.traefik-router.rule: Host(`traefik.${TRAEFIK_DOMAIN_NAME}`)
