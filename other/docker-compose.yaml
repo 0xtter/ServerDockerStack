@@ -18,10 +18,17 @@ services:
     container_name: homepage
     restart: unless-stopped
     volumes:
-      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/homepage/config:/app/config # Make sure your local config directory exists
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/bookmarks.yaml:/app/config/bookmarks.yaml:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/custom.css:/app/config/custom.css:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/custom.js:/app/config/custom.js:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/docker.yaml:/app/config/docker.yaml:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/kubernetes.yaml:/app/config/kubernetes.yaml:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/services.yaml:/app/config/services.yaml:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/settings.yaml:/app/config/settings.yaml:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/config/widgets.yaml:/app/config/widgets.yaml:ro
       - /var/run/docker.sock:/var/run/docker.sock # (optional) For docker integrations
-      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/homepage/images:/app/public/images # Background images
-      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/homepage/icons:/app/public/icons # Background images
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/images:/app/public/images:ro # Background images
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/homepage/icons:/app/public/icons:ro # Background images
     environment:
       - HOMEPAGE_ALLOWED_HOSTS=${TRAEFIK_DOMAIN_NAME}
       - HOMEPAGE_VAR_BASE_DOMAIN_NAME=${TRAEFIK_DOMAIN_NAME}
@@ -39,7 +46,7 @@ services:
       traefik.http.services.homepage-service.loadbalancer.server.scheme: http
 
   watchtower:
-    image: containrrr/watchtower
+    image: containrrr/watchtower:1.7.1
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -95,7 +102,7 @@ services:
       traefik.http.services.stirling-pdf-service.loadbalancer.server.scheme: http
 
   redis:
-    image: docker.io/library/redis:latest
+    image: docker.io/library/redis:8.2.1
     container_name: redis
     restart: unless-stopped
     volumes:
@@ -108,7 +115,7 @@ services:
     container_name: postgres
     restart: unless-stopped
     volumes:
-      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/postgres/init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/postgres/init-multiple-dbs.sh:/docker-entrypoint-initdb.d/init-multiple-dbs.sh:ro
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -118,7 +125,7 @@ services:
       - postgres
 
   paperless:
-    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.18.3
     container_name: paperless
     restart: unless-stopped
     depends_on:
@@ -163,7 +170,7 @@ services:
       traefik.http.services.paperless-service.loadbalancer.server.scheme: http
 
   immich:
-    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-server:v1.140.1
     container_name: immich
     restart: unless-stopped
     volumes:
@@ -199,7 +206,7 @@ services:
       traefik.http.services.immich-service.loadbalancer.server.scheme: http
 
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-machine-learning:v1.140.1
     container_name: immich-machine-learning
     restart: unless-stopped
     networks:

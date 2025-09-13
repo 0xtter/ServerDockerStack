@@ -7,7 +7,7 @@ networks:
 
 services:
   wireguard:
-    image: ghcr.io/wg-easy/wg-easy
+    image: ghcr.io/wg-easy/wg-easy:14
     container_name: wireguard
     restart: unless-stopped
     environment:
@@ -23,29 +23,27 @@ services:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/wireguard:/etc/wireguard
     ports:
       - "51820:51820/udp" # A mettre en var env
-      # - "51821:51821/tcp" # A mettre en var env
+      - "51821:51821/tcp" # A mettre en var env
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
     sysctls:
       - net.ipv4.ip_forward=1
       - net.ipv4.conf.all.src_valid_mark=1
-    networks:
-      - internet
     labels:
-      traefik.enable: true
-      traefik.docker.network: internet
+      traefik.enable: false # To fix
 
       # Wireguard Web UI
       traefik.http.routers.wireguard-router.rule: Host(`wireguard.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.wireguard-router.entrypoints: websecure
       traefik.http.routers.wireguard-router.service: wireguard-service
       traefik.http.routers.wireguard-router.tls: true
-      traefik.http.services.wireguard-service.loadbalancer.server.port: 51821
-      traefik.http.services.wireguard-service.loadbalancer.server.scheme: http
+
+      # Service points to host port 51821
+      traefik.http.services.wireguard-service.loadbalancer.server.url: "http://wireguard:51821"
 
   adguard:  
-    image: adguard/adguardhome:latest
+    image: adguard/adguardhome:v0.107.65
     container_name: adguard
     restart: unless-stopped
     ports:
@@ -104,7 +102,7 @@ services:
       - TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
 
   traefik:
-    image: "traefik:latest"
+    image: traefik:v3.5
     container_name: "traefik"
     restart: unless-stopped
     command:
@@ -143,8 +141,8 @@ services:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
 
-      traefik.http.routers.traefik-router.tls.domains[0].main: homelycookie.duckdns.org
-      traefik.http.routers.traefik-router.tls.domains[0].sans: "*.homelycookie.duckdns.org"
+      traefik.http.routers.traefik-router.tls.domains[0].main: "${TRAEFIK_DOMAIN_NAME}"
+      traefik.http.routers.traefik-router.tls.domains[0].sans: "*.${TRAEFIK_DOMAIN_NAME}"
 
       # Rule for port 8080 (traefik)
       traefik.http.routers.traefik-router.rule: Host(`traefik.${TRAEFIK_DOMAIN_NAME}`)
@@ -155,7 +153,7 @@ services:
       traefik.http.services.traefik-service.loadbalancer.server.scheme: http
 
   vpn:
-    image: qmcgaw/gluetun
+    image: qmcgaw/gluetun:latest
     container_name: vpn
     restart: unless-stopped
     cap_add:
