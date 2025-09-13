@@ -1,0 +1,36 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/en/configs/settings
+
+title: Home Laboratory
+
+background: https://picsum.photos/1920/1080
+backgroundOpacity: 0.7
+cardBlur: md # sm, "", md, etc... see https://tailwindcss.com/docs/backdrop-blur
+theme: dark
+color: slate
+showStats: true
+statusStyle: dot
+headerStyle: clean
+language: en
+
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: true
+  showSearchSuggestions: true
+  hideVisitURL: true
+  provider: google # google, duckduckgo, bing, baidu, brave or custom
+
+layout:
+  Media:
+    tab: HomeLab
+  Tools:
+    tab: HomeLab
+  Arr:
+    tab: HomeLab
+  HomeLab Administration:
+    tab: HomeLab
+  Download:
+    tab: HomeLab
+  Other:
+    tab: HomeLab

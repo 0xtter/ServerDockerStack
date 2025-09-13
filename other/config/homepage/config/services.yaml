@@ -1,0 +1,137 @@
+
+- Media:
+    - Jellyfin:
+        icon: jellyfin.svg
+        href: https://jellyfin.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: jellyfin
+        description: Streaming client
+        target: _blank
+    - Plex:
+        icon: plex.svg
+        href: https://plex.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: plex
+        description: Streaming client
+        target: _blank
+    - Overseerr:
+        icon: overseerr.svg
+        href: https://overseerr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: overseerr
+        description: Choose your movies to download!
+        target: _blank
+
+- Download:
+    - QbitTorrent:
+        icon: qbittorrent.svg
+        href: https://qbittorrent.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: qbittorrent
+        description: Torrent downloader
+        target: _blank
+    - YoutubeDL:
+        icon: youtube-dl.svg
+        href: https://youtube-dl.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: ytdl_material
+        description: Download videos from youtube
+        target: _blank
+        
+- Arr:
+    - Radarr:
+        icon: radarr.svg
+        href: https://radarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: radarr
+        description: Movie indexer
+        target: _blank
+    - Sonarr:
+        icon: sonarr.svg
+        href: https://sonarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: sonarr
+        description: Series indexer
+        target: _blank
+    - Bazarr:
+        icon: bazarr.svg
+        href: https://bazarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: bazarr
+        description: Subtitles downloader
+        target: _blank
+    - Prowlarr:
+        icon: prowlarr.svg
+        href: https://prowlarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: prowlarr
+        description: All in one indexer
+        target: 
+        
+- Tools:
+    - Stirling-pdf:
+        icon: stirling-pdf.svg
+        href: https://stirling-pdf.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: stirling-pdf
+        description: PDF editor
+        target: _blank
+    - Paperless:
+        icon: paperless-ngx.svg
+        href: https://paperless.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: paperless
+        description: Digitize all your documents in one place
+        target: _blank
+    - Immich:
+        icon: immich.svg
+        href: https://immich.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: immich
+        description: Photos storage
+        target: _blank
+    - Firefox:
+        icon: firefox.svg
+        href: https://firefox.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: firefox
+        description: Web browser behind a vpn
+        target: _blank
+
+- HomeLab Administration:
+    - Portainer:
+        icon: portainer.svg
+        href: https://portainer.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: portainer
+        description: Docker management
+        target: _blank
+
+    - Traefik:
+        icon: traefik.svg
+        href: https://traefik.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: traefik
+        description: Reverse proxy
+        target: _blank
+
+    - Grafana:
+        icon: grafana.svg
+        href: https://grafana.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: grafana
+        description: Monitor your logs, metrics and more...
+        target: _blank
+
+    - Wireguard:
+        icon: wireguard.svg
+        href: https://wireguard.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: wireguard
+        description: VPN Server
+        target: _blank
+
+    - AdGuard:
+        icon: adguard-home.svg
+        href: https://adguard.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: adguard
+        description: DNS Server + ad blocker
+        target: _blank
+
+    - Uptime-kuma:
+        icon: uptime-kuma.svg
+        href: https://uptime-kuma.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: uptime-kuma
+        description: Uptime of services
+        target: _blank
+
+- Other:
+    - Commafeed:
+        icon: commafeed.svg
+        href: https://commafeed.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: commafeed
+        description: RSS reader
+        target: _blank
