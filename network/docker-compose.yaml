@@ -237,3 +237,11 @@ services:
       traefik.http.routers.youtube-dl-router.tls: true
       traefik.http.services.youtube-dl-service.loadbalancer.server.port: 17442
       traefik.http.services.youtube-dl-service.loadbalancer.server.scheme: http
+
+      # Rule for port 8082 (commafeed)
+      traefik.http.routers.commafeed-router.rule: Host(`commafeed.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.commafeed-router.entrypoints: websecure
+      traefik.http.routers.commafeed-router.service: commafeed-service
+      traefik.http.routers.commafeed-router.tls: true
+      traefik.http.services.commafeed-service.loadbalancer.server.port: 8082
+      traefik.http.services.commafeed-service.loadbalancer.server.scheme: http

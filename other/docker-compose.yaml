@@ -208,3 +208,18 @@ services:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/immich/cache:/cache
     healthcheck:
       disable: false
+
+  commafeed:
+    image: athou/commafeed:latest-h2
+    container_name: commafeed
+    restart: unless-stopped
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/commafeed/db:/commafeed/data
+    networks:
+      - internet
+      - reverse_proxy
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    network_mode: container:vpn

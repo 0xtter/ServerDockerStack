@@ -127,3 +127,11 @@
         container: uptime-kuma
         description: Uptime of services
         target: _blank
+
+- Other:
+    - Commafeed:
+        icon: commafeed.svg
+        href: https://commafeed.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: commafeed
+        description: RSS reader
+        target: _blank
