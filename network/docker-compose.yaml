@@ -243,3 +243,11 @@ services:
       traefik.http.routers.commafeed-router.tls: true
       traefik.http.services.commafeed-service.loadbalancer.server.port: 8082
       traefik.http.services.commafeed-service.loadbalancer.server.scheme: http
+
+      # Rule for port 1200 (rsshub)
+      traefik.http.routers.rsshub-router.rule: Host(`rsshub.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.rsshub-router.entrypoints: websecure
+      traefik.http.routers.rsshub-router.service: rsshub-service
+      traefik.http.routers.rsshub-router.tls: true
+      traefik.http.services.rsshub-service.loadbalancer.server.port: 1200
+      traefik.http.services.rsshub-service.loadbalancer.server.scheme: http
