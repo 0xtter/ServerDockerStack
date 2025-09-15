@@ -237,7 +237,8 @@ services:
     environment:
       NODE_ENV: production
       TWITTER_AUTH_TOKEN: ${RSSHUB_TWITTER_AUTH_TOKEN}
-    test: ["CMD", "curl", "-f", "http://localhost:1200/healthz"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:1200/healthz"]
       interval: 30s
       timeout: 10s
       retries: 3
