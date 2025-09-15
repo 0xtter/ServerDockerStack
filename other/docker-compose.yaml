@@ -222,6 +222,8 @@ services:
     restart: unless-stopped
     volumes:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/commafeed/db:/commafeed/data
+    environment:
+      COMMAFEED_HTTP_CLIENT_BLOCK_LOCAL_ADDRESSES: false
     deploy:
       resources:
         limits:
@@ -234,6 +236,7 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
+      TWITTER_AUTH_TOKEN: ${RSSHUB_TWITTER_AUTH_TOKEN}
     test: ["CMD", "curl", "-f", "http://localhost:1200/healthz"]
       interval: 30s
       timeout: 10s
