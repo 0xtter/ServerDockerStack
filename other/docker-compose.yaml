@@ -237,6 +237,8 @@ services:
     environment:
       NODE_ENV: production
       TWITTER_AUTH_TOKEN: ${RSSHUB_TWITTER_AUTH_TOKEN}
+      TELEGRAM_API_ID: ${TELEGRAM_API_ID}
+      TELEGRAM_API_HASH: ${TELEGRAM_API_HASH}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:1200/healthz"]
       interval: 30s
