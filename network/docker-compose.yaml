@@ -228,14 +228,6 @@ services:
       traefik.http.services.bazarr-service.loadbalancer.server.port: 6767
       traefik.http.services.bazarr-service.loadbalancer.server.scheme: http
 
-      # Rule for port 17442 (youtube-dl)
-      traefik.http.routers.youtube-dl-router.rule: Host(`youtube-dl.${TRAEFIK_DOMAIN_NAME}`)
-      traefik.http.routers.youtube-dl-router.entrypoints: websecure
-      traefik.http.routers.youtube-dl-router.service: youtube-dl-service
-      traefik.http.routers.youtube-dl-router.tls: true
-      traefik.http.services.youtube-dl-service.loadbalancer.server.port: 17442
-      traefik.http.services.youtube-dl-service.loadbalancer.server.scheme: http
-
       # Rule for port 8082 (commafeed)
       traefik.http.routers.commafeed-router.rule: Host(`commafeed.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.commafeed-router.entrypoints: websecure
