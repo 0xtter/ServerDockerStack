@@ -32,6 +32,12 @@
         container: ytdl_material
         description: Download videos from youtube
         target: _blank
+    - Pinchflat:
+        icon: pinchflat.svg
+        href: https://pinchflat.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: pinchflat
+        description: Download videos from youtube
+        target: _blank
         
 - Arr:
     - Radarr:

@@ -154,6 +154,31 @@ services:
       - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/movies:/movies
     network_mode: container:vpn
 
+  pinchflat:
+    image: ghcr.io/kieraneglin/pinchflat:latest
+    container_name: pinchflat
+    environment:
+      - PUID=${USER_UID}
+      - PGID=${USER_GID}
+      - TZ=${GENERAL_TIMEZONE}
+    restart: unless-stopped
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/pinchflat/config:/app/appdata
+      - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/youtube/video:/downloads
+    networks:
+      - reverse_proxy
+      - internet
+    labels:
+      traefik.enable: true
+      traefik.docker.network: reverse_proxy
+
+      traefik.http.routers.pinchflat-router.rule: Host(`pinchflat.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.pinchflat-router.entrypoints: websecure
+      traefik.http.routers.pinchflat-router.service: pinchflat-service
+      traefik.http.routers.pinchflat-router.tls: true
+      traefik.http.services.pinchflat-service.loadbalancer.server.port: 8945
+      traefik.http.services.pinchflat-service.loadbalancer.server.scheme: http
+
   ytdl_material:
     image: tzahi12345/youtubedl-material:nightly
     container_name: ytdl_material
