@@ -179,29 +179,29 @@ services:
       traefik.http.services.pinchflat-service.loadbalancer.server.port: 8945
       traefik.http.services.pinchflat-service.loadbalancer.server.scheme: http
 
-  ytdl_material:
-    image: tzahi12345/youtubedl-material:nightly
-    container_name: ytdl_material
-    restart: unless-stopped
-    volumes:
-      - ${GENERAL_BASE_DOCKER_DATA_PATH}/youtube-dl/appdata:/app/appdata
-      - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/youtube/audio:/app/audio
-      - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/youtube/video:/app/video
-      - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/youtube/subscriptions:/app/subscriptions
-      - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/youtube/users:/app/users
-    networks:
-      - reverse_proxy
-      - internet
-    labels:
-      traefik.enable: true
-      traefik.docker.network: reverse_proxy
+  # ytdl_material:
+  #   image: tzahi12345/youtubedl-material:nightly
+  #   container_name: ytdl_material
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ${GENERAL_BASE_DOCKER_DATA_PATH}/youtube-dl/appdata:/app/appdata
+  #     - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/youtube/audio:/app/audio
+  #     - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/youtube/video:/app/video
+  #     - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/youtube/subscriptions:/app/subscriptions
+  #     - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/videos/youtube/users:/app/users
+  #   networks:
+  #     - reverse_proxy
+  #     - internet
+  #   labels:
+  #     traefik.enable: true
+  #     traefik.docker.network: reverse_proxy
 
-      traefik.http.routers.youtube-dl-router.rule: Host(`youtube-dl.${TRAEFIK_DOMAIN_NAME}`)
-      traefik.http.routers.youtube-dl-router.entrypoints: websecure
-      traefik.http.routers.youtube-dl-router.service: youtube-dl-service
-      traefik.http.routers.youtube-dl-router.tls: true
-      traefik.http.services.youtube-dl-service.loadbalancer.server.port: 17442
-      traefik.http.services.youtube-dl-service.loadbalancer.server.scheme: http
+  #     traefik.http.routers.youtube-dl-router.rule: Host(`youtube-dl.${TRAEFIK_DOMAIN_NAME}`)
+  #     traefik.http.routers.youtube-dl-router.entrypoints: websecure
+  #     traefik.http.routers.youtube-dl-router.service: youtube-dl-service
+  #     traefik.http.routers.youtube-dl-router.tls: true
+  #     traefik.http.services.youtube-dl-service.loadbalancer.server.port: 17442
+  #     traefik.http.services.youtube-dl-service.loadbalancer.server.scheme: http
 
   overseerr:
     image: lscr.io/linuxserver/overseerr:latest
