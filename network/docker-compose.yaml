@@ -131,7 +131,7 @@ services:
       - "443:443"
     environment:
       - DUCKDNS_TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
-      - MYADDR_PRIVATE_KEYS_MAPPING="${TRAEFIK_SUBDOMAIN_NAME}:${TRAEFIK_MYADDR_IO_TOKEN}"
+      - MYADDR_PRIVATE_KEYS_MAPPING=${TRAEFIK_SUBDOMAIN_NAME}:${TRAEFIK_MYADDR_IO_TOKEN}
     volumes:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/letsencrypt:/letsencrypt
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
