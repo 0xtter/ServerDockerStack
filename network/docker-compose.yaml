@@ -102,7 +102,7 @@ services:
       - TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
 
   traefik:
-    image: traefik:v3.5
+    image: traefik:v3.6
     container_name: "traefik"
     restart: unless-stopped
     command:
