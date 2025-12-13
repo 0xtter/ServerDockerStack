@@ -1,4 +1,6 @@
-![Server Docker Stack](docs/images/Logo.png)
+<p align="center">
+  <img src="docs/images/Logo.png" />
+</p>
 
 ---
 
