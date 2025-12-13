@@ -144,6 +144,7 @@ services:
 
       traefik.http.routers.traefik-router.tls.domains[0].main: "${TRAEFIK_DOMAIN_NAME}"
       traefik.http.routers.traefik-router.tls.domains[0].sans: "*.${TRAEFIK_DOMAIN_NAME}"
+      traefik.http.routers.traefik-router.tls.certresolver: myresolver # Uses the Host rule to define which certificate to issue
 
       # Rule for port 8080 (traefik)
       traefik.http.routers.traefik-router.rule: Host(`traefik.${TRAEFIK_DOMAIN_NAME}`)
