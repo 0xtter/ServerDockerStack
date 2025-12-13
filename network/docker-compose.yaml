@@ -132,7 +132,7 @@ services:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/letsencrypt:/letsencrypt
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     healthcheck:
-      test: ["CMD", "sh", "-c", "wget -q -O - 'https://myaddr.io/update?key=${TRAEFIK_MYADDR_IO_TOKEN}&ip=${GENERAL_SERVER_LOCAL_ADDRESS}"] # To update myaddr.io with server private IP
+      test: ["CMD", "sh", "-c", "wget -q -O - 'https://myaddr.io/update?key=${TRAEFIK_MYADDR_IO_TOKEN}&ip=${GENERAL_SERVER_LOCAL_ADDRESS}'"] # To update myaddr.io with server private IP
       interval: 86400s # Every 24 hours
       timeout: 10s
       retries: 3
