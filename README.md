@@ -67,7 +67,7 @@ sudo nano /etc/systemd/system/serverdockerstack.service
 
 Then paste the following:
 
-```toml
+```ini
 [Unit]
 Description=Server Docker Stack Manager
 After=network.target docker.service
