@@ -116,12 +116,8 @@ services:
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--certificatesresolvers.myresolver.acme.dnschallenge=true"
       - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=${TRAEFIK_PROVIDER}" # Adjust if you want to use another DNS provider
-      # - "--certificatesresolvers.cloudflare.acme.dnschallenge.resolvers[0]=1.1.1.1:53"
-      # - "--certificatesresolvers.cloudflare.acme.dnschallenge.resolvers[1]=8.8.8.8:53"
       - "--certificatesresolvers.myresolver.acme.email=postmaster@${TRAEFIK_DOMAIN_NAME}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      # - "--certificatesResolvers.myresolver.acme.dnschallenge.propagation.delayBeforeChecks=60"
-      # - "--certificatesresolvers.myresolver.acme.dnschallenge.propagation.disableChecks=true"
       - "--serverstransport.insecureskipverify=true"
     dns:
       - 1.1.1.1
