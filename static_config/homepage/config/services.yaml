@@ -26,6 +26,14 @@
         container: qbittorrent
         description: Torrent downloader
         target: _blank
+        widget:
+            type: qbittorrent
+            url: https://qbittorrent.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+            username: {{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}
+            password: {{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}
+            enableLeechProgress: true # optional, defaults to false
+            enableLeechSize: true # optional, defaults to false
+            fields: ["leech", "download", "upload"]
     - YoutubeDL:
         icon: youtube-dl.svg
         href: https://youtube-dl.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
@@ -33,7 +41,7 @@
         description: Download videos from youtube
         target: _blank
     - Pinchflat:
-        icon: pinchflat.svg
+        icon: pinchflat.png
         href: https://pinchflat.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
         container: pinchflat
         description: Download videos from youtube
@@ -46,12 +54,24 @@
         container: radarr
         description: Movie indexer
         target: _blank
+        widget:
+            type: radarr
+            url: https://radarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+            key: {{HOMEPAGE_VAR_RADARR_API_KEY}}
+            enableQueue: true # optional, defaults to false
+            fields: ["wanted", "missing", "queued", "movies"]
     - Sonarr:
         icon: sonarr.svg
         href: https://sonarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
         container: sonarr
         description: Series indexer
         target: _blank
+        widget:
+            type: sonarr
+            url: https://sonarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+            key: {{HOMEPAGE_VAR_SONARR_API_KEY}}
+            enableQueue: true # optional, defaults to false
+            fields: ["wanted", "queued", "series"]
     - Bazarr:
         icon: bazarr.svg
         href: https://bazarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
@@ -113,13 +133,6 @@
         description: Monitor your logs, metrics and more...
         target: _blank
 
-    - Wireguard:
-        icon: wireguard.svg
-        href: http://wireguard.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}:51821 # To adapt after fixing
-        container: wireguard
-        description: VPN Server
-        target: _blank
-
     - AdGuard:
         icon: adguard-home.svg
         href: https://adguard.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
@@ -132,6 +145,13 @@
         href: https://uptime-kuma.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
         container: uptime-kuma
         description: Uptime of services
+        target: _blank
+
+    - Vscode:
+        icon: vscode.svg
+        href: https://vscode.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: vscode
+        description: Visual Studio Code
         target: _blank
 
 - Other:
