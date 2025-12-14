@@ -106,14 +106,7 @@
         container: grafana
         description: Monitor your logs, metrics and more...
         target: _blank
-
-    - Wireguard:
-        icon: wireguard.svg
-        href: https://wireguard.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
-        container: wireguard
-        description: VPN Server
-        target: _blank
-
+        
     - AdGuard:
         icon: adguard-home.svg
         href: https://adguard.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
