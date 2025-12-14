@@ -28,7 +28,7 @@
         target: _blank
         widget:
             type: qbittorrent
-            url: https://qbittorrent.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+            url: https://vpn:8090
             username: {{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}
             password: {{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}
             enableLeechProgress: true # optional, defaults to false
@@ -56,7 +56,7 @@
         target: _blank
         widget:
             type: radarr
-            url: https://radarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+            url: http://vpn:7878
             key: {{HOMEPAGE_VAR_RADARR_API_KEY}}
             enableQueue: true # optional, defaults to false
             fields: ["wanted", "missing", "queued", "movies"]
@@ -68,7 +68,7 @@
         target: _blank
         widget:
             type: sonarr
-            url: https://sonarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+            url: https://vpn:8989
             key: {{HOMEPAGE_VAR_SONARR_API_KEY}}
             enableQueue: true # optional, defaults to false
             fields: ["wanted", "queued", "series"]
