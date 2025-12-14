@@ -7,40 +7,34 @@ networks:
 
 services:
   wireguard:
-    image: ghcr.io/wg-easy/wg-easy:14
+    image: lscr.io/linuxserver/wireguard:1.0.20250521 # fixed version to avoid possibles issues with latest
     container_name: wireguard
     restart: unless-stopped
-    environment:
-      - WG_HOST=${WIREGUARD_PUBLIC_DOMAIN_NAME}
-      - PASSWORD_HASH=${WIREGUARD_UI_PASSWORD}
-      - WG_DEFAULT_DNS=${GENERAL_DNS_SERVER_ADDRESS}
-      - WG_DEFAULT_ADDRESS=${WIREGUARD_VPN_RANGE}
-      - WG_ALLOWED_IPS=${WIREGUARD_ALLOWED_IPS},${GENERAL_DNS_SERVER_ADDRESS}/32
-      - WG_DEVICE=${WIREGUARD_DEVICE}
-      - UI_TRAFFIC_STATS=true
-      - UI_CHART_TYPE=2
-    volumes:
-      - ${GENERAL_BASE_DOCKER_DATA_PATH}/wireguard:/etc/wireguard
-    ports:
-      - "51820:51820/udp" # A mettre en var env
-      - "51821:51821/tcp" # A mettre en var env
     cap_add:
       - NET_ADMIN
-      - SYS_MODULE
+    environment:
+      - PUID=${USER_UID}
+      - PGID=${USER_GID}
+      - TZ=${GENERAL_TIMEZONE}
+      - SERVERURL=${WIREGUARD_PUBLIC_DOMAIN_NAME}
+      - SERVERPORT=51820
+      - PEERS=${WIREGUARD_PEERS}
+      - PEERDNS=${GENERAL_DNS_SERVER_ADDRESS}
+      - INTERNAL_SUBNET=${WIREGUARD_VPN_RANGE}
+      - ALLOWEDIPS=${WIREGUARD_ALLOWED_IPS}
+      - LOG_CONFS=true
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/wireguard/config:/config
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl -f 'https://ipv4.myaddr.tools/update?key=${TRAEFIK_MYADDR_IO_TOKEN}&ip=self'"] # To update myaddr.io with server public IP
+      interval: 86400s # Every 24 hours
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    ports:
+      - 51820:51820/udp
     sysctls:
-      - net.ipv4.ip_forward=1
       - net.ipv4.conf.all.src_valid_mark=1
-    labels:
-      traefik.enable: false # To fix
-
-      # Wireguard Web UI
-      traefik.http.routers.wireguard-router.rule: Host(`wireguard.${TRAEFIK_DOMAIN_NAME}`)
-      traefik.http.routers.wireguard-router.entrypoints: websecure
-      traefik.http.routers.wireguard-router.service: wireguard-service
-      traefik.http.routers.wireguard-router.tls: true
-
-      # Service points to host port 51821
-      traefik.http.services.wireguard-service.loadbalancer.server.url: "http://wireguard:51821"
 
   adguard:  
     image: adguard/adguardhome:v0.107.65
@@ -90,16 +84,16 @@ services:
       traefik.http.services.portainer-service.loadbalancer.server.port: 9443
       traefik.http.services.portainer-service.loadbalancer.server.scheme: https
     
-  duckdns:
-    image: lscr.io/linuxserver/duckdns:latest
-    container_name: duckdns
-    restart: unless-stopped
-    environment:
-      - PUID=${USER_UID}
-      - PGID=${USER_GID}
-      - TZ=${GENERAL_TIMEZONE}
-      - SUBDOMAINS=${WIREGUARD_PUBLIC_DOMAIN_NAME}
-      - TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
+  # duckdns: # Uncomment if you want to use duckdns for Traefik
+  #   image: lscr.io/linuxserver/duckdns:latest
+  #   container_name: duckdns
+  #   restart: unless-stopped
+  #   environment:
+  #     - PUID=${USER_UID}
+  #     - PGID=${USER_GID}
+  #     - TZ=${GENERAL_TIMEZONE}
+  #     - SUBDOMAINS=${WIREGUARD_PUBLIC_DOMAIN_NAME}
+  #     - TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
 
   traefik:
     image: traefik:v3.6
