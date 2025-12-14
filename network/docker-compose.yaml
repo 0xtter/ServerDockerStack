@@ -25,6 +25,12 @@ services:
       - LOG_CONFS=true
     volumes:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/wireguard/config:/config
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl -f 'https://ipv4.myaddr.tools/update?key=${TRAEFIK_MYADDR_IO_TOKEN}&ip=self'"] # To update myaddr.io with server public IP
+      interval: 86400s # Every 24 hours
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     ports:
       - 51820:51820/udp
     sysctls:
@@ -78,16 +84,16 @@ services:
       traefik.http.services.portainer-service.loadbalancer.server.port: 9443
       traefik.http.services.portainer-service.loadbalancer.server.scheme: https
     
-  duckdns:
-    image: lscr.io/linuxserver/duckdns:latest
-    container_name: duckdns
-    restart: unless-stopped
-    environment:
-      - PUID=${USER_UID}
-      - PGID=${USER_GID}
-      - TZ=${GENERAL_TIMEZONE}
-      - SUBDOMAINS=${WIREGUARD_PUBLIC_DOMAIN_NAME}
-      - TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
+  # duckdns: # Uncomment if you want to use duckdns for Traefik
+  #   image: lscr.io/linuxserver/duckdns:latest
+  #   container_name: duckdns
+  #   restart: unless-stopped
+  #   environment:
+  #     - PUID=${USER_UID}
+  #     - PGID=${USER_GID}
+  #     - TZ=${GENERAL_TIMEZONE}
+  #     - SUBDOMAINS=${WIREGUARD_PUBLIC_DOMAIN_NAME}
+  #     - TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
 
   traefik:
     image: traefik:v3.6
