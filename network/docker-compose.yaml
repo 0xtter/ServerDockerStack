@@ -26,7 +26,7 @@ services:
     volumes:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/wireguard/config:/config
     healthcheck:
-      test: ["CMD", "sh", "-c", "curl -f 'https://ipv4.myaddr.tools/update?key=${TRAEFIK_MYADDR_IO_TOKEN}&ip=self'"] # To update myaddr.io with server public IP
+      test: ["CMD", "sh", "-c", "curl -f 'https://ipv4.myaddr.tools/update?key=${TRAEFIK_MYADDR_IO_TOKEN_PUB_IP}&ip=self'"] # To update myaddr.io with server public IP
       interval: 86400s # Every 24 hours
       timeout: 10s
       retries: 3
