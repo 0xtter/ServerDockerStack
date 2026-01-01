@@ -36,6 +36,7 @@ services:
       - HOMEPAGE_VAR_SONARR_API_KEY=${HOMEPAGE_VAR_SONARR_API_KEY}
       - HOMEPAGE_VAR_QBITTORRENT_USERNAME=${HOMEPAGE_VAR_QBITTORRENT_USERNAME}
       - HOMEPAGE_VAR_QBITTORRENT_PASSWORD=${HOMEPAGE_VAR_QBITTORRENT_PASSWORD}
+      - HOMEPAGE_VAR_MEALIE_API_KEY=${HOMEPAGE_VAR_MEALIE_API_KEY}
     networks:
       - reverse_proxy
       - internet
@@ -250,3 +251,34 @@ services:
       timeout: 10s
       retries: 3
     network_mode: container:vpn
+
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:v3.9.1 # Update if necessary
+    container_name: mealie
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+    networks:
+      - reverse_proxy
+      - internet
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/mealie/data:/app/data
+    environment:
+      ALLOW_SIGNUP: "false"
+      PUID: ${USER_UID}
+      PGID: ${USER_GID}
+      TZ: ${GENERAL_TIMEZONE}
+      BASE_URL: https://mealie.${TRAEFIK_DOMAIN_NAME}
+    labels:
+      traefik.enable: true
+      traefik.docker.network: reverse_proxy
+
+      # Rule for port 8000 (mealie)
+      traefik.http.routers.mealie-router.rule: Host(`mealie.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.mealie-router.entrypoints: websecure
+      traefik.http.routers.mealie-router.service: mealie-service
+      traefik.http.routers.mealie-router.tls: true
+      traefik.http.services.mealie-service.loadbalancer.server.port: 9000
+      traefik.http.services.mealie-service.loadbalancer.server.scheme: http

@@ -161,3 +161,16 @@
         container: commafeed
         description: RSS reader
         target: _blank
+
+    - Mealie:
+        icon: mealie.svg
+        href: https://mealie.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: mealie
+        description: Meal planning and recipe management
+        target: _blank
+        widget:
+            type: mealie
+            url: http://mealie:9000
+            key: {{HOMEPAGE_VAR_MEALIE_API_KEY}}
+            version: 2
+            fields: ["recipes", "users", "categories"]
