@@ -176,7 +176,7 @@ services:
       traefik.http.services.paperless-service.loadbalancer.server.scheme: http
 
   immich:
-    image: ghcr.io/immich-app/immich-server:v2.3.1
+    image: ghcr.io/immich-app/immich-server:v2.4.1
     container_name: immich
     restart: unless-stopped
     volumes:
@@ -212,7 +212,7 @@ services:
       traefik.http.services.immich-service.loadbalancer.server.scheme: http
 
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:v2.3.1
+    image: ghcr.io/immich-app/immich-machine-learning:v2.4.1
     container_name: immich-machine-learning
     restart: unless-stopped
     networks:
