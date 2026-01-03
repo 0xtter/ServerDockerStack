@@ -107,7 +107,7 @@ services:
       traefik.http.services.stirling-pdf-service.loadbalancer.server.scheme: http
 
   redis:
-    image: docker.io/library/redis:8.2.1
+    image: docker.io/library/redis:8.4.0
     container_name: redis
     restart: unless-stopped
     volumes:
@@ -116,7 +116,7 @@ services:
       - redis
 
   postgres:
-    image: ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0
     container_name: postgres
     restart: unless-stopped
     volumes:
@@ -126,11 +126,12 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       DB_STORAGE_TYPE: 'HDD'
+      POSTGRES_INITDB_ARGS: '--data-checksums'
     networks:
       - postgres
 
   paperless:
-    image: ghcr.io/paperless-ngx/paperless-ngx:2.18.3
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.20.3
     container_name: paperless
     restart: unless-stopped
     depends_on:
@@ -175,7 +176,7 @@ services:
       traefik.http.services.paperless-service.loadbalancer.server.scheme: http
 
   immich:
-    image: ghcr.io/immich-app/immich-server:v1.140.1
+    image: ghcr.io/immich-app/immich-server:v2.4.1
     container_name: immich
     restart: unless-stopped
     volumes:
@@ -211,7 +212,7 @@ services:
       traefik.http.services.immich-service.loadbalancer.server.scheme: http
 
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:v1.140.1
+    image: ghcr.io/immich-app/immich-machine-learning:v2.4.1
     container_name: immich-machine-learning
     restart: unless-stopped
     networks:
