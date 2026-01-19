@@ -42,11 +42,10 @@ services:
     container_name: loki
     restart: unless-stopped
     command: -config.file=/etc/loki/local-config.yaml
-    user: "${USER_UID}:${USER_GID}"
+    user: "0"
     volumes:
       - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/loki/config:/etc/loki:ro
-      - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/logs/loki/chunks:/loki/chunks
-      - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/logs/loki/rules:/loki/rules
+      - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/logs/loki/data:/loki/data
     networks:
       - loki
 
