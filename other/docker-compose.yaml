@@ -51,7 +51,7 @@ services:
       traefik.http.services.homepage-service.loadbalancer.server.scheme: http
 
   watchtower:
-    image: containrrr/watchtower:1.7.1
+    image: nickfedor/watchtower:latest
     container_name: watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
