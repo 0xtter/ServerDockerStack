@@ -50,14 +50,14 @@ services:
       traefik.http.services.homepage-service.loadbalancer.server.port: 3000
       traefik.http.services.homepage-service.loadbalancer.server.scheme: http
 
-  watchtower:
-    image: nickfedor/watchtower:latest
-    container_name: watchtower
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      WATCHTOWER_CLEANUP: true
-    restart: unless-stopped
+  # watchtower: # Causes problems after update with containers bind to vpn
+  #   image: nickfedor/watchtower:latest
+  #   container_name: watchtower
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   environment:
+  #     WATCHTOWER_CLEANUP: true
+  #   restart: unless-stopped
 
   samba:
     image: dperson/samba:latest
