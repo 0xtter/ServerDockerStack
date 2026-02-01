@@ -325,4 +325,4 @@ services:
       LETS_ENCRYPT_MAIL: example@${TRAEFIK_DOMAIN_NAME}
       JWT_SECRET: ${NEXTCLOUD_DOCUMENT_SERVER_JWT_SECRET}
     networks:
-      - netxcloud
+      - nextcloud
