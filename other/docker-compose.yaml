@@ -303,6 +303,7 @@ services:
       - ${GENERAL_BASE_DOCKER_FILES_PATH}/nextcloud/data:/data
     networks:
       - reverse_proxy
+      - internet
       - nextcloud
     labels:
       traefik.enable: true
