@@ -303,7 +303,7 @@ services:
       - ${GENERAL_BASE_DOCKER_FILES_PATH}/nextcloud/data:/data
     networks:
       - reverse_proxy
-      - netxcloud
+      - nextcloud
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
