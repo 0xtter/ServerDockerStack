@@ -11,6 +11,9 @@ networks:
   postgres:
     name: postgres
     internal: true
+  nextcloud:
+    name: nextcloud
+    internal: true
 
 services:
   homepage:
@@ -283,3 +286,44 @@ services:
       traefik.http.routers.mealie-router.tls: true
       traefik.http.services.mealie-service.loadbalancer.server.port: 9000
       traefik.http.services.mealie-service.loadbalancer.server.scheme: http
+
+  nextcloud:
+    image: lscr.io/linuxserver/nextcloud:32.0.5
+    container_name: nextcloud
+    environment:
+    restart: unless-stopped
+    environment:
+      PUID: ${USER_UID}
+      PGID: ${USER_GID}
+      TZ: ${GENERAL_TIMEZONE}
+      SQLITE_DATABASE: "nextcloudDB"
+      NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD}
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/nextcloud/appdata:/config
+      - ${GENERAL_BASE_DOCKER_FILES_PATH}/nextcloud/data:/data
+    networks:
+      - reverse_proxy
+      - netxcloud
+    labels:
+      traefik.enable: true
+      traefik.docker.network: reverse_proxy
+
+      # Rule for port 443 (nextcloud)
+      traefik.http.routers.nextcloud-router.rule: Host(`nextcloud.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.nextcloud-router.entrypoints: websecure
+      traefik.http.routers.nextcloud-router.service: nextcloud-service
+      traefik.http.routers.nextcloud-router.tls: true
+      traefik.http.services.nextcloud-service.loadbalancer.server.port: 443
+      traefik.http.services.nextcloud-service.loadbalancer.server.scheme: https
+
+  onlyoffice:
+    image: onlyoffice/documentserver:latest
+    container_name: onlyoffice
+    restart: unless-stopped
+    environment:
+      LETS_ENCRYPT_DOMAIN: onlyoffice.${TRAEFIK_DOMAIN_NAME}
+      LETS_ENCRYPT_MAIL: example@${TRAEFIK_DOMAIN_NAME}
+      JWT_SECRET: ${NEXTCLOUD_DOCUMENT_SERVER_JWT_SECRET}
+    networks:
+      - netxcloud
