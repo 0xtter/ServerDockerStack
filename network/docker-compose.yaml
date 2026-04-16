@@ -138,8 +138,6 @@ services:
       reverse_proxy:
         ipv4_address: 172.42.0.253
       internet:
-    expose: # Expose 443 for internal request of containers through traefik
-     - "443"
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy

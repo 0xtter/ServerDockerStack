@@ -288,7 +288,7 @@ services:
       traefik.http.services.mealie-service.loadbalancer.server.scheme: http
 
   nextcloud:
-    image: lscr.io/linuxserver/nextcloud:32.0.5
+    image: lscr.io/linuxserver/nextcloud:33.0.2
     container_name: nextcloud
     restart: unless-stopped
     environment:
@@ -320,7 +320,7 @@ services:
       traefik.http.services.nextcloud-service.loadbalancer.server.scheme: https
 
   onlyoffice:
-    image: onlyoffice/documentserver:latest
+    image: onlyoffice/documentserver:9.3
     container_name: onlyoffice
     restart: unless-stopped
     environment:
