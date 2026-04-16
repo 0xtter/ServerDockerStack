@@ -135,8 +135,9 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - reverse_proxy
-      - internet
+      reverse_proxy:
+        ipv4_address: 172.42.0.253
+      internet:
     expose: # Expose 443 for internal request of containers through traefik
      - "443"
     labels:
