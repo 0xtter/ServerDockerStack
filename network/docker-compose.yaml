@@ -2,6 +2,9 @@ networks:
   reverse_proxy:
     name: reverse_proxy
     internal: true
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
   internet:
     name: internet
 
