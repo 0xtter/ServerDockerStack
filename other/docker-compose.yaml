@@ -327,3 +327,17 @@ services:
       JWT_SECRET: ${NEXTCLOUD_DOCUMENT_SERVER_JWT_SECRET}
     networks:
       - nextcloud
+      - reverse_proxy
+    extra_hosts:
+      - "onlyoffice.${TRAEFIK_DOMAIN_NAME}:traefik"
+    labels:
+      traefik.enable: true
+      traefik.docker.network: reverse_proxy
+
+      # Rule for port 443 (onlyoffice)
+      traefik.http.routers.onlyoffice-router.rule: Host(`onlyoffice.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.onlyoffice-router.entrypoints: websecure
+      traefik.http.routers.onlyoffice-router.service: onlyoffice-service
+      traefik.http.routers.onlyoffice-router.tls: true
+      traefik.http.services.onlyoffice-service.loadbalancer.server.port: 80
+      traefik.http.services.onlyoffice-service.loadbalancer.server.scheme: http
