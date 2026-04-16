@@ -302,7 +302,7 @@ services:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/nextcloud/appdata:/config
       - ${GENERAL_BASE_DOCKER_FILES_PATH}/nextcloud/data:/data
     extra_hosts:
-      - "onlyoffice.${TRAEFIK_DOMAIN_NAME}:172.42.0.10"
+      - "onlyoffice.${TRAEFIK_DOMAIN_NAME}:172.42.0.125"
     networks:
       - reverse_proxy
       - internet
@@ -330,7 +330,7 @@ services:
     networks:
       nextcloud:
       reverse_proxy:
-        ipv4_address: 172.42.0.10
+        ipv4_address: 172.42.0.125
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
