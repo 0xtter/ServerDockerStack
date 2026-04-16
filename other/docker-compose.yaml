@@ -326,10 +326,11 @@ services:
       LETS_ENCRYPT_MAIL: example@${TRAEFIK_DOMAIN_NAME}
       JWT_SECRET: ${NEXTCLOUD_DOCUMENT_SERVER_JWT_SECRET}
     networks:
-      - nextcloud
-      - reverse_proxy
+      nextcloud:
+      reverse_proxy:
+        ipv4_address: 172.20.0.10
     extra_hosts:
-      - "onlyoffice.${TRAEFIK_DOMAIN_NAME}:traefik"
+      - "onlyoffice.${TRAEFIK_DOMAIN_NAME}:172.20.0.10"
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
