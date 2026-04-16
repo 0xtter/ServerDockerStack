@@ -137,6 +137,8 @@ services:
     networks:
       - reverse_proxy
       - internet
+    expose: # Expose 443 for internal request of containers through traefik
+     - "443"
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
