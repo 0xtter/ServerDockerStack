@@ -327,6 +327,8 @@ services:
       LETS_ENCRYPT_DOMAIN: onlyoffice.${TRAEFIK_DOMAIN_NAME}
       LETS_ENCRYPT_MAIL: example@${TRAEFIK_DOMAIN_NAME}
       JWT_SECRET: ${NEXTCLOUD_DOCUMENT_SERVER_JWT_SECRET}
+    extra_hosts:
+      - "nextcloud.${TRAEFIK_DOMAIN_NAME}:172.42.0.253"
     networks:
       - reverse_proxy
       - nextcloud
