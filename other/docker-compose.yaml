@@ -343,3 +343,7 @@ services:
       traefik.http.routers.onlyoffice-router.tls: true
       traefik.http.services.onlyoffice-service.loadbalancer.server.port: 80
       traefik.http.services.onlyoffice-service.loadbalancer.server.scheme: http
+      # important: tell upstream it's HTTPS externally
+      traefik.http.middlewares.onlyoffice-sslheader.headers.customrequestheaders.X-Forwarded-Proto: https
+      traefik.http.middlewares.onlyoffice-sslheader.headers.customrequestheaders.X-Forwarded-Host: onlyoffice.${TRAEFIK_DOMAIN_NAME}
+      traefik.http.routers.onlyoffice-router.middlewares: onlyoffice-sslheader
