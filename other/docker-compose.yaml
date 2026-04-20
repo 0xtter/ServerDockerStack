@@ -350,6 +350,7 @@ services:
     image: docker.n8n.io/n8nio/n8n:latest
     container_name: n8n
     restart: unless-stopped
+    user: "${USER_UID}:${USER_GID}"
     environment:
       - GENERIC_TIMEZONE=${GENERAL_TIMEZONE}
       - TZ=${GENERAL_TIMEZONE}
