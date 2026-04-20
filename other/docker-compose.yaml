@@ -358,8 +358,6 @@ services:
       - N8N_RUNNERS_ENABLED=true
         # IMPORTANT 
       - N8N_HOST=n8n.${TRAEFIK_DOMAIN_NAME}
-      - N8N_PROTOCOL=https
-      - N8N_PORT=443
       # FIX reverse proxy
       - WEBHOOK_URL=https://n8n.${TRAEFIK_DOMAIN_NAME}/
       - N8N_PROXY_HOPS=1
