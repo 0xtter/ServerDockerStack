@@ -359,7 +359,8 @@ services:
       - N8N_EDITOR_BASE_URL=https://n8n.${TRAEFIK_DOMAIN_NAME}
       - N8N_HOST=n8n.${TRAEFIK_DOMAIN_NAME}
     volumes:
-      - ${GENERAL_BASE_DOCKER_DATA_PATH}/n8n:/.n8n
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/n8n/data:/.n8n
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/n8n/cache:/.cache
     networks:
       - reverse_proxy
       - internet
