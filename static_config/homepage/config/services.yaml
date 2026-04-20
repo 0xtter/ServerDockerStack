@@ -174,3 +174,10 @@
             key: {{HOMEPAGE_VAR_MEALIE_API_KEY}}
             version: 2
             fields: ["recipes", "users", "categories"]
+
+    - Nextcloud:
+        icon: nextcloud.svg
+        href: https://nextcloud.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: nextcloud
+        description: File sharing and storing service
+        target: _blank

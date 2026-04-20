@@ -2,6 +2,9 @@ networks:
   reverse_proxy:
     name: reverse_proxy
     internal: true
+    ipam:
+      config:
+        - subnet: 172.42.0.0/16
   internet:
     name: internet
 
@@ -132,8 +135,9 @@ services:
       retries: 3
       start_period: 40s
     networks:
-      - reverse_proxy
-      - internet
+      reverse_proxy:
+        ipv4_address: 172.42.0.253
+      internet:
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy

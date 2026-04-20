@@ -11,6 +11,9 @@ networks:
   postgres:
     name: postgres
     internal: true
+  nextcloud:
+    name: nextcloud
+    internal: true
 
 services:
   homepage:
@@ -283,3 +286,64 @@ services:
       traefik.http.routers.mealie-router.tls: true
       traefik.http.services.mealie-service.loadbalancer.server.port: 9000
       traefik.http.services.mealie-service.loadbalancer.server.scheme: http
+
+  nextcloud:
+    image: lscr.io/linuxserver/nextcloud:33.0.2
+    container_name: nextcloud
+    restart: unless-stopped
+    environment:
+      PUID: ${USER_UID}
+      PGID: ${USER_GID}
+      TZ: ${GENERAL_TIMEZONE}
+      SQLITE_DATABASE: "nextcloudDB"
+      NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD}
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/nextcloud/appdata:/config
+      - ${GENERAL_BASE_DOCKER_FILES_PATH}/nextcloud/data:/data
+    extra_hosts:
+      - "onlyoffice.${TRAEFIK_DOMAIN_NAME}:172.42.0.253"
+    networks:
+      - reverse_proxy
+      - internet
+      - nextcloud
+    labels:
+      traefik.enable: true
+      traefik.docker.network: reverse_proxy
+
+      # Rule for port 443 (nextcloud)
+      traefik.http.routers.nextcloud-router.rule: Host(`nextcloud.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.nextcloud-router.entrypoints: websecure
+      traefik.http.routers.nextcloud-router.service: nextcloud-service
+      traefik.http.routers.nextcloud-router.tls: true
+      traefik.http.services.nextcloud-service.loadbalancer.server.port: 443
+      traefik.http.services.nextcloud-service.loadbalancer.server.scheme: https
+
+  onlyoffice:
+    image: onlyoffice/documentserver:9.3
+    container_name: onlyoffice
+    restart: unless-stopped
+    environment:
+      LETS_ENCRYPT_DOMAIN: onlyoffice.${TRAEFIK_DOMAIN_NAME}
+      LETS_ENCRYPT_MAIL: example@${TRAEFIK_DOMAIN_NAME}
+      JWT_SECRET: ${NEXTCLOUD_DOCUMENT_SERVER_JWT_SECRET}
+    extra_hosts:
+      - "nextcloud.${TRAEFIK_DOMAIN_NAME}:172.42.0.253"
+    networks:
+      - reverse_proxy
+      - nextcloud
+    labels:
+      traefik.enable: true
+      traefik.docker.network: reverse_proxy
+
+      # Rule for port 443 (onlyoffice)
+      traefik.http.routers.onlyoffice-router.rule: Host(`onlyoffice.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.onlyoffice-router.entrypoints: websecure
+      traefik.http.routers.onlyoffice-router.service: onlyoffice-service
+      traefik.http.routers.onlyoffice-router.tls: true
+      traefik.http.services.onlyoffice-service.loadbalancer.server.port: 80
+      traefik.http.services.onlyoffice-service.loadbalancer.server.scheme: http
+      # important: tell upstream it's HTTPS externally
+      traefik.http.middlewares.onlyoffice-sslheader.headers.customrequestheaders.X-Forwarded-Proto: https
+      traefik.http.middlewares.onlyoffice-sslheader.headers.customrequestheaders.X-Forwarded-Host: onlyoffice.${TRAEFIK_DOMAIN_NAME}
+      traefik.http.routers.onlyoffice-router.middlewares: onlyoffice-sslheader
