@@ -11,6 +11,9 @@ networks:
   prometheus:
     name: prometheus
     internal: true
+  postgres:
+    name: postgres
+    external: true
 
 services:
   grafana:

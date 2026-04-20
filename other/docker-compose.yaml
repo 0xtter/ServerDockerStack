@@ -157,7 +157,7 @@ services:
       PAPERLESS_TIME_ZONE: ${GENERAL_TIMEZONE}
       PAPERLESS_OCR_LANGUAGE: ${PAPERLESS_LANGUAGE}
       PAPERLESS_OCR_LANGUAGES: ${PAPERLESS_LANGUAGES}
-      PAPERLESS_SECRET_KEY: "8ka4lvi8I4mRarLVyrPEj8IKC4i1HVSs"
+      PAPERLESS_SECRET_KEY: ${PAPERLESS_SECRET_KEY}
       PAPERLESS_ADMIN_USER: ${PAPERLESS_ADMIN_USER}
       PAPERLESS_ADMIN_PASSWORD: ${PAPERLESS_ADMIN_PASSWORD}
     networks:
@@ -370,6 +370,7 @@ services:
     networks:
       - reverse_proxy
       - internet
+      - postgres
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
