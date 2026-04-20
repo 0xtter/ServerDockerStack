@@ -110,6 +110,12 @@
         container: firefox
         description: Web browser behind a vpn
         target: _blank
+    - N8N:
+        icon: n8n.svg
+        href: https://n8n.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: n8n
+        description: Workflow automation tool
+        target: _blank
 
 - HomeLab Administration:
     - Portainer:

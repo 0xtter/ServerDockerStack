@@ -279,7 +279,7 @@ services:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
 
-      # Rule for port 8000 (mealie)
+      # Rule for port 9000 (mealie)
       traefik.http.routers.mealie-router.rule: Host(`mealie.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.mealie-router.entrypoints: websecure
       traefik.http.routers.mealie-router.service: mealie-service
@@ -324,8 +324,6 @@ services:
     container_name: onlyoffice
     restart: unless-stopped
     environment:
-      LETS_ENCRYPT_DOMAIN: onlyoffice.${TRAEFIK_DOMAIN_NAME}
-      LETS_ENCRYPT_MAIL: example@${TRAEFIK_DOMAIN_NAME}
       JWT_SECRET: ${NEXTCLOUD_DOCUMENT_SERVER_JWT_SECRET}
     extra_hosts:
       - "nextcloud.${TRAEFIK_DOMAIN_NAME}:172.42.0.253"
@@ -336,7 +334,7 @@ services:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
 
-      # Rule for port 443 (onlyoffice)
+      # Rule for port 80 (onlyoffice)
       traefik.http.routers.onlyoffice-router.rule: Host(`onlyoffice.${TRAEFIK_DOMAIN_NAME}`)
       traefik.http.routers.onlyoffice-router.entrypoints: websecure
       traefik.http.routers.onlyoffice-router.service: onlyoffice-service
@@ -347,3 +345,28 @@ services:
       traefik.http.middlewares.onlyoffice-sslheader.headers.customrequestheaders.X-Forwarded-Proto: https
       traefik.http.middlewares.onlyoffice-sslheader.headers.customrequestheaders.X-Forwarded-Host: onlyoffice.${TRAEFIK_DOMAIN_NAME}
       traefik.http.routers.onlyoffice-router.middlewares: onlyoffice-sslheader
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    environment:
+      - GENERIC_TIMEZONE=${GENERAL_TIMEZONE}
+      - TZ=${GENERAL_TIMEZONE}
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_EDITOR_BASE_URL=https://n8n.${TRAEFIK_DOMAIN_NAME}
+      - N8N_HOST=n8n.${TRAEFIK_DOMAIN_NAME}
+    volumes:
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/n8n:/home/node/.n8n
+    labels:
+      traefik.enable: true
+      traefik.docker.network: reverse_proxy
+
+      # Rule for port 5678 (n8n)
+      traefik.http.routers.n8n-router.rule: Host(`n8n.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.n8n-router.entrypoints: websecure
+      traefik.http.routers.n8n-router.service: n8n-service
+      traefik.http.routers.n8n-router.tls: true
+      traefik.http.services.n8n-service.loadbalancer.server.port: 5678
+      traefik.http.services.n8n-service.loadbalancer.server.scheme: http
