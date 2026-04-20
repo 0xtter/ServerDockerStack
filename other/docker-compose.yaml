@@ -359,6 +359,9 @@ services:
       - N8N_HOST=n8n.${TRAEFIK_DOMAIN_NAME}
     volumes:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/n8n:/home/node/.n8n
+    networks:
+      - reverse_proxy
+      - internet
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
