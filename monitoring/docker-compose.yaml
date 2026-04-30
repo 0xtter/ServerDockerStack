@@ -27,6 +27,7 @@ services:
       - reverse_proxy
       - prometheus
       - loki
+      - postgres
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
