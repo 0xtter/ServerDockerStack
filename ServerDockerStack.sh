@@ -44,19 +44,13 @@ run_compose() {
 
 # Bring services up
 if [[ "$ACTION" == "up" ]]; then
-    # Start network first
-    run_compose "$PROJECT_DIR/network"
-
     # Then start the rest
-    for service in media monitoring other; do
+    for service in network other media monitoring; do # Important order
         run_compose "$PROJECT_DIR/$service"
     done
 else
     # Bring all down
-    for service in media monitoring other; do
+    for service in media monitoring other network; do # Important order
         run_compose "$PROJECT_DIR/$service"
     done
-
-    # Stop network last
-    run_compose "$PROJECT_DIR/network"
 fi
