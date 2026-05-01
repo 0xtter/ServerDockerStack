@@ -393,11 +393,11 @@ services:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/backrest/cache:/cache
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/backrest/tmp:/tmp
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/backrest/rclone:/root/.config/rclone # Mount for rclone config (needed when using rclone remotes)
-      - ${GENERAL_BASE_DOCKER_DATA_PATH}/data:/userdata/docker_data # Mount local paths to backup
-      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}/data:/userdata/config # Mount local paths to backup
-      - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/data:/userdata/media # Mount local paths to backup
-      - ${GENERAL_BASE_DOCKER_FILES_PATH}/data:/userdata/files # Mount local paths to backup
-      - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/data:/userdata/monitoring # Mount local paths to backup
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}:/userdata/docker_data # Mount local paths to backup
+      - ${GENERAL_BASE_DOCKER_CONFIG_PATH}:/userdata/config # Mount local paths to backup
+      - ${GENERAL_BASE_DOCKER_MEDIA_PATH}:/userdata/media # Mount local paths to backup
+      - ${GENERAL_BASE_DOCKER_FILES_PATH}:/userdata/files # Mount local paths to backup
+      - ${GENERAL_BASE_DOCKER_MONITORING_PATH}:/userdata/monitoring # Mount local paths to backup
       - ${GENERAL_BASE_DOCKER_BACKUP_PATH}:/repos/general # Mount local repos (optional for remote storage)
       - ${BACKREST_BACKUP_PATH}:/repos/backrest # Mount local repos (optional for remote storage)
     environment:
@@ -406,7 +406,7 @@ services:
       - XDG_CACHE_HOME=/cache
       - TMPDIR=/tmp
       - TZ=${GENERAL_TIMEZONE}
-      - BACKREST_REPO_PASSWORD=${BACKREST_REPO_PASSWORD}
+      - RESTIC_PASSWORD=${BACKREST_REPO_PASSWORD}
     networks:
       - reverse_proxy
       - internet
