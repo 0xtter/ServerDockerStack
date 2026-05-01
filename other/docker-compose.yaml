@@ -398,7 +398,8 @@ services:
       - ${GENERAL_BASE_DOCKER_MEDIA_PATH}/data:/userdata/media # Mount local paths to backup
       - ${GENERAL_BASE_DOCKER_FILES_PATH}/data:/userdata/files # Mount local paths to backup
       - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/data:/userdata/monitoring # Mount local paths to backup
-      - ${GENERAL_BASE_DOCKER_BACKUP_PATH}:/repos # Mount local repos (optional for remote storage)
+      - ${GENERAL_BASE_DOCKER_BACKUP_PATH}:/repos/general # Mount local repos (optional for remote storage)
+      - ${BACKREST_BACKUP_PATH}:/repos/backrest # Mount local repos (optional for remote storage)
     environment:
       - BACKREST_DATA=/data
       - BACKREST_CONFIG=/config/config.json
