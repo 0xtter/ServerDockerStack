@@ -160,6 +160,13 @@
         description: Visual Studio Code
         target: _blank
 
+    - Backrest:
+        icon: backrest.svg
+        href: https://backrest.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: backrest
+        description: Backup management
+        target: _blank
+
 - Other:
     - Commafeed:
         icon: commafeed.svg
