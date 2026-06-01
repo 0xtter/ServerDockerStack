@@ -34,11 +34,6 @@
             enableLeechProgress: true # optional, defaults to false
             enableLeechSize: true # optional, defaults to false
             fields: ["leech", "download", "upload"]
-    - YoutubeDL:
-        icon: youtube-dl.svg
-        href: https://youtube-dl.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
-        container: ytdl_material
-        description: Download videos from youtube
         target: _blank
     - Pinchflat:
         icon: pinchflat.png
