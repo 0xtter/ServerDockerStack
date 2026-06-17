@@ -34,7 +34,6 @@
             enableLeechProgress: true # optional, defaults to false
             enableLeechSize: true # optional, defaults to false
             fields: ["leech", "download", "upload"]
-        target: _blank
     - Pinchflat:
         icon: pinchflat.png
         href: https://pinchflat.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
