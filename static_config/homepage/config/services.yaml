@@ -77,7 +77,6 @@
         href: https://prowlarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
         container: prowlarr
         description: All in one indexer
-        target: 
         
 - Tools:
     - Stirling-pdf:
