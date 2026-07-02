@@ -77,7 +77,7 @@
         href: https://prowlarr.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
         container: prowlarr
         description: All in one indexer
-        target: 
+        target: _blank
         
 - Tools:
     - Stirling-pdf:
@@ -152,6 +152,13 @@
         href: https://vscode.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
         container: code-server
         description: Visual Studio Code
+        target: _blank
+
+    - Backrest:
+        icon: backrest.svg
+        href: https://backrest.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: backrest
+        description: Backup management
         target: _blank
 
 - Other:
