@@ -134,7 +134,7 @@ services:
       - postgres
 
   paperless:
-    image: ghcr.io/paperless-ngx/paperless-ngx:3.0.5
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.20.15
     container_name: paperless
     restart: unless-stopped
     depends_on:
