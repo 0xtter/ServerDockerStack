@@ -10,7 +10,7 @@ networks:
 
 services:
   wireguard:
-    image: lscr.io/linuxserver/wireguard:1.0.20250521 # fixed version to avoid possibles issues with latest
+    image: lscr.io/linuxserver/wireguard:1.0.20260223 # fixed version to avoid possibles issues with latest
     container_name: wireguard
     restart: unless-stopped
     cap_add:
@@ -99,7 +99,7 @@ services:
   #     - TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
 
   traefik:
-    image: traefik:v3.6
+    image: traefik:v3.7
     container_name: "traefik"
     restart: unless-stopped
     command:
