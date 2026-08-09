@@ -129,6 +129,7 @@ services:
       - MYADDR_PRIVATE_KEYS_MAPPING=${TRAEFIK_SUBDOMAIN_NAME}:${TRAEFIK_MYADDR_IO_TOKEN}
     volumes:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/letsencrypt:/letsencrypt
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/traefik/logs:/var/log/traefik
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     healthcheck:
       test: ["CMD", "sh", "-c", "wget -q -O - 'https://myaddr.io/update?key=${TRAEFIK_MYADDR_IO_TOKEN}&ip=${GENERAL_SERVER_LOCAL_ADDRESS}'"] # To update myaddr.io with server private IP
