@@ -231,7 +231,7 @@ services:
     restart: unless-stopped
     volumes:
       - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/glance/config:/app/config:ro
-      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/glance/assets:/app/assets
+      - ${GENERAL_BASE_DOCKER_FILES_PATH}/glance/assets:/app/assets
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       TZ: ${GENERAL_TIMEZONE}
