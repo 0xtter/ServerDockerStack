@@ -225,18 +225,16 @@ services:
     healthcheck:
       disable: false
 
-  commafeed:
-    image: athou/commafeed:latest-h2
-    container_name: commafeed
+  glance:
+    image: glanceapp/glance:latest
+    container_name: glance
     restart: unless-stopped
     volumes:
-      - ${GENERAL_BASE_DOCKER_DATA_PATH}/commafeed/db:/commafeed/data
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/glance/config:/app/config:ro
+      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/glance/assets:/app/assets:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      COMMAFEED_HTTP_CLIENT_BLOCK_LOCAL_ADDRESSES: false
-    deploy:
-      resources:
-        limits:
-          memory: 256M
+      TZ: ${GENERAL_TIMEZONE}
     network_mode: container:vpn
 
   rsshub:

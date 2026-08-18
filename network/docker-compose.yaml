@@ -232,13 +232,13 @@ services:
       traefik.http.services.bazarr-service.loadbalancer.server.port: 6767
       traefik.http.services.bazarr-service.loadbalancer.server.scheme: http
 
-      # Rule for port 8082 (commafeed)
-      traefik.http.routers.commafeed-router.rule: Host(`commafeed.${TRAEFIK_DOMAIN_NAME}`)
-      traefik.http.routers.commafeed-router.entrypoints: websecure
-      traefik.http.routers.commafeed-router.service: commafeed-service
-      traefik.http.routers.commafeed-router.tls: true
-      traefik.http.services.commafeed-service.loadbalancer.server.port: 8082
-      traefik.http.services.commafeed-service.loadbalancer.server.scheme: http
+      # Rule for Glance
+      traefik.http.routers.glance-router.rule: Host(`glance.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.glance-router.entrypoints: websecure
+      traefik.http.routers.glance-router.service: glance-service
+      traefik.http.routers.glance-router.tls: true
+      traefik.http.services.glance-service.loadbalancer.server.port: 8080
+      traefik.http.services.glance-service.loadbalancer.server.scheme: http
 
       # Rule for port 1200 (rsshub)
       traefik.http.routers.rsshub-router.rule: Host(`rsshub.${TRAEFIK_DOMAIN_NAME}`)
