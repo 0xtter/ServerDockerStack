@@ -162,11 +162,11 @@
         target: _blank
 
 - Other:
-    - Commafeed:
-        icon: commafeed.svg
-        href: https://commafeed.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
-        container: commafeed
-        description: RSS reader
+    - Glance:
+        icon: glance.svg
+        href: https://glance.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: glance
+        description: RSS reader / News aggregator
         target: _blank
 
     - Mealie:
