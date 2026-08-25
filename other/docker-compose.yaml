@@ -240,7 +240,7 @@ services:
         --api-enabled
         --base-url freshrss.${TRAEFIK_DOMAIN_NAME}
         --db-base freshrss
-        --db-host postgress
+        --db-host postgres
         --db-user ${POSTGRES_USER}
         --db-password ${POSTGRES_PASSWORD}
         --db-type pgsql
