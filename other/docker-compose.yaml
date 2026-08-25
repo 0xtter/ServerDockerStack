@@ -254,6 +254,7 @@ services:
         --user admin
     networks:
       - internet
+      - postgres
       - reverse_proxy
     labels:
       traefik.enable: true
