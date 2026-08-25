@@ -225,17 +225,47 @@ services:
     healthcheck:
       disable: false
 
-  glance:
-    image: glanceapp/glance:latest
-    container_name: glance
+  freshrss:
+    image: freshrss/freshrss:latest
+    container_name: freshrss
     restart: unless-stopped
     volumes:
-      - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/glance/config:/app/config:ro
-      - ${GENERAL_BASE_DOCKER_FILES_PATH}/glance/assets:/app/assets
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/freshrss/data:/var/www/FreshRSS/data
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/freshrss/extensions:/var/www/FreshRSS/extensions
     environment:
       TZ: ${GENERAL_TIMEZONE}
-    network_mode: container:vpn
+      CRON_MIN: "*/20"
+      FRESHRSS_ENV: production
+      FRESHRSS_INSTALL: |-
+        --api-enabled
+        --base-url freshrss.${TRAEFIK_DOMAIN_NAME}
+        --db-base freshrss
+        --db-host postgress
+        --db-user ${POSTGRES_USER}
+        --db-password ${POSTGRES_PASSWORD}
+        --db-type pgsql
+        --default-user admin
+        --language en
+      FRESHRSS_USER: |-
+        --api-password ${FRESHRSS_PASSWORD}
+        --email ${FRESHRSS_ADMIN_EMAIl}
+        --language en
+        --password ${FRESHRSS_PASSWORD}
+        --user admin
+    networks:
+      - internet
+      - reverse_proxy
+    labels:
+      traefik.enable: true
+      traefik.docker.network: reverse_proxy
+
+      # Rule for port 80 (freshrss)
+      traefik.http.routers.freshrss-router.rule: Host(`freshrss.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.freshrss-router.entrypoints: websecure
+      traefik.http.routers.freshrss-router.service: freshrss-service
+      traefik.http.routers.freshrss-router.tls: true
+      traefik.http.services.freshrss-service.loadbalancer.server.port: 80
+      traefik.http.services.freshrss-service.loadbalancer.server.scheme: http
 
   rsshub:
     image: diygod/rsshub:latest
