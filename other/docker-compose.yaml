@@ -238,7 +238,6 @@ services:
       FRESHRSS_ENV: production
       FRESHRSS_INSTALL: |-
         --api-enabled
-        --base-url freshrss.${TRAEFIK_DOMAIN_NAME}
         --db-base freshrss
         --db-host postgres
         --db-user ${POSTGRES_USER}
