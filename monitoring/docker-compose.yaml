@@ -91,6 +91,7 @@ services:
     devices:
       - /dev/kmsg
     privileged: true
+    pid: host
     restart: unless-stopped
     depends_on:
       - loki
