@@ -50,7 +50,7 @@ loki.source.docker "containers" {
   targets = discovery.relabel.docker_logs.output
 
   labels = {
-    platform = "docker"
+    platform = "docker",
   }
 
   forward_to = [loki.write.local.receiver]
@@ -63,8 +63,8 @@ loki.source.docker "containers" {
 
 local.file_match "linux_logs" {
   path_targets = [{
-    __address__ = "localhost"
-    __path__    = "/var/log/host_logs/{syslog,messages,*.log}"
+    __address__ = "localhost",
+    __path__    = "/var/log/host_logs/{syslog,messages,*.log}",
 
     platform = "host"
   }]
