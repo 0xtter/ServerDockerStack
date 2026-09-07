@@ -66,6 +66,7 @@ services:
     networks:
       - reverse_proxy
       - loki
+      - prometheus
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
@@ -91,16 +92,17 @@ services:
       - /dev/kmsg
     privileged: true
     restart: unless-stopped
+    depends_on:
+      - loki
+      - prometheus
     command: 
       - --housekeeping_interval=30s
       - --max_housekeeping_interval=35s
-      - --event_storage_event_limit=default=0
-      - --event_storage_age_limit=default=0
       - --store_container_labels=false
       - --global_housekeeping_interval=30s
       - --event_storage_event_limit=default=0
       - --event_storage_age_limit=default=0
-      - --disable_metrics=percpu,process,sched,tcp,udp,disk,diskIO,network # enable only the ones listed
+      - --disable_metrics=percpu,process,sched,tcp,udp # enable only the ones listed
       - --docker_only # only show stats for docker containers
       - --allow_dynamic_housekeeping=true
       - --storage_duration=1m0s
@@ -112,6 +114,9 @@ services:
     container_name: prometheus
     restart: unless-stopped
     user: "0"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-remote-write-receiver"
     volumes:
       - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/prometheus/config:/etc/prometheus:ro
       - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/logs/prometheus/data:/prometheus

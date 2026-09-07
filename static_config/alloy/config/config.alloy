@@ -1,53 +1,117 @@
+// ============================================================================
+// Loki output
+// ============================================================================
+
 loki.write "local" {
   endpoint {
     url = "http://loki:3100/loki/api/v1/push"
   }
 }
 
-discovery.docker "linux" {
+
+// ============================================================================
+// Docker container logs
+// ============================================================================
+
+discovery.docker "containers" {
   host = "unix:///var/run/docker.sock"
 }
 
-// Define a relabeling rule to create a service name from the container name.
-discovery.relabel "logs_integrations_docker" {
-      targets = []
-  
-      rule {
-          source_labels = ["__meta_docker_container_name"]
-          regex = "/(.*)"
-          target_label = "service_name"
-      }
+discovery.relabel "docker_logs" {
+  targets = discovery.docker.containers.targets
 
+  // Docker container name: /grafana -> grafana
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "service_name"
   }
 
-// Configure a loki.source.docker component to collect logs from Docker containers.
-loki.source.docker "default" {
-  host       = "unix:///var/run/docker.sock"
-  targets    = discovery.docker.linux.targets
-  labels     = {"platform" = "docker"}
-  relabel_rules = discovery.relabel.logs_integrations_docker.rules
+  // Useful Docker metadata
+  rule {
+    source_labels = ["__meta_docker_container_image"]
+    target_label  = "image"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    target_label  = "compose_service"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
+    target_label  = "compose_project"
+  }
+}
+
+loki.source.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+
+  targets = discovery.relabel.docker_logs.output
+
+  labels = {
+    platform = "docker"
+  }
+
   forward_to = [loki.write.local.receiver]
 }
 
 
-local.file_match "linux_logs_scrape" {
+// ============================================================================
+// Host / Linux logs
+// ============================================================================
+
+local.file_match "linux_logs" {
   path_targets = [{
-    // Target localhost for log collection
-    __address__ = "localhost",
-    // Collect standard system logs
-    __path__    = "/var/log/host_logs/{syslog,messages,*.log}",
-    // Add instance label with hostname
-    //instance    = constants.hostname,
-    // Add job label for logs
-    platform         = "host",
+    __address__ = "localhost"
+    __path__    = "/var/log/host_logs/{syslog,messages,*.log}"
+
+    platform = "host"
   }]
 }
 
-
-// Collect logs from files for node_exporter
 loki.source.file "linux_logs" {
-  // Use targets defined in local.file_match
-  targets    = local.file_match.linux_logs_scrape.targets
-  // Send logs to the local Loki instance
+  targets    = local.file_match.linux_logs.targets
   forward_to = [loki.write.local.receiver]
+}
+
+// ============================================================================
+// Prometheus
+// ============================================================================
+
+
+prometheus.scrape "cadvisor" {
+  targets = [
+    {
+      "__address__" = "cadvisor:8080",
+    },
+  ]
+
+  scrape_interval = "15s"
+
+  forward_to = [
+    prometheus.remote_write.local.receiver,
+  ]
+}
+
+prometheus.remote_write "local" {
+  endpoint {
+    url = "http://prometheus:9090/api/v1/write"
+  }
+}
+
+// node_exporter
+
+prometheus.scrape "node_exporter" {
+  targets = [
+    {
+      "__address__" = "node-exporter:9100",
+    },
+  ]
+
+  scrape_interval = "15s"
+
+  forward_to = [
+    prometheus.remote_write.local.receiver,
+  ]
 }
