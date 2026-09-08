@@ -79,8 +79,8 @@ loki.source.journal "journald" {
   forward_to = [loki.write.local.receiver]
 
   labels = {
-    platform = "host"
-    source   = "journald"
+    platform = "host",
+    source   = "journald",
   }
 }
 
