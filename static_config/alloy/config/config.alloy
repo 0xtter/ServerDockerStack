@@ -75,6 +75,15 @@ loki.source.file "linux_logs" {
   forward_to = [loki.write.local.receiver]
 }
 
+loki.source.journal "journald" {
+  forward_to = [loki.write.local.receiver]
+
+  labels = {
+    platform = "host"
+    source   = "journald"
+  }
+}
+
 // ============================================================================
 // Prometheus
 // ============================================================================
