@@ -62,8 +62,6 @@ services:
       - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/alloy/config:/etc/alloy:ro
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/alloy/data:/var/lib/alloy/data
       - /var/log:/var/log/host_logs:ro
-      - /var/log/journal:/var/log/journal:ro
-      - /run/log/journal:/run/log/journal:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - reverse_proxy
