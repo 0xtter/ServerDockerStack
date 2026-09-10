@@ -76,6 +76,9 @@ loki.source.file "linux_logs" {
 }
 
 loki.source.journal "journald" {
+  
+  max_age = "24h"
+
   forward_to = [loki.write.local.receiver]
 
   labels = {
