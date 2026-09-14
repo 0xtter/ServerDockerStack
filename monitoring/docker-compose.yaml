@@ -28,6 +28,7 @@ services:
       - prometheus
       - loki
       - postgres
+      - internet
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
