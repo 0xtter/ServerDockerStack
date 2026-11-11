@@ -29,6 +29,9 @@ services:
       - loki
       - postgres
       - internet
+    environment:
+      - GF_INSTALL_PLUGINS=${GRAFANA_INSTALL_PLUGINS}
+      - GF_FEATURE_TOGGLES_ENABLE=${GRAFANA_FEATURE_TOGGLES_ENABLE}
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
