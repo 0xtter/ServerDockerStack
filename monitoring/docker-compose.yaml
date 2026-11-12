@@ -32,7 +32,7 @@ services:
     environment:
       - GF_INSTALL_PLUGINS=${GRAFANA_INSTALL_PLUGINS}
       - GF_FEATURE_TOGGLES_ENABLE=${GRAFANA_FEATURE_TOGGLES_ENABLE}
-      - GF_AUTH_MANAGED_SERVICE_ACCOUNTS_ENABLED="true"
+      - GF_AUTH_MANAGED_SERVICE_ACCOUNTS_ENABLED=true
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
