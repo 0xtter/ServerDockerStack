@@ -428,6 +428,11 @@ services:
       - ${GENERAL_BASE_DOCKER_MONITORING_PATH}:/userdata/monitoring # Mount local paths to backup
       - ${GENERAL_BASE_DOCKER_BACKUP_PATH}:/repos/general # Mount local repos (optional for remote storage)
       - ${BACKREST_BACKUP_PATH}:/repos/backrest # Mount local repos (optional for remote storage)
+      - type: bind
+        source: ${BACKREST_BACKUP_PATH2}
+        target: /repos/backrest2
+        bind:
+          propagation: rslave
     environment:
       - BACKREST_DATA=/data
       - BACKREST_CONFIG=/config/config.json
