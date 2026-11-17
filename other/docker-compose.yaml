@@ -331,6 +331,7 @@ services:
       - ${GENERAL_BASE_DOCKER_FILES_PATH}/nextcloud/data:/data
     extra_hosts:
       - "onlyoffice.${TRAEFIK_DOMAIN_NAME}:172.42.0.253"
+      - "nextcloud.${TRAEFIK_DOMAIN_NAME}:172.42.0.253"
     networks:
       - reverse_proxy
       - internet
@@ -355,6 +356,7 @@ services:
       JWT_SECRET: ${NEXTCLOUD_DOCUMENT_SERVER_JWT_SECRET}
     extra_hosts:
       - "nextcloud.${TRAEFIK_DOMAIN_NAME}:172.42.0.253"
+      - "onlyoffice.${TRAEFIK_DOMAIN_NAME}:172.42.0.253"
     networks:
       - reverse_proxy
       - nextcloud
