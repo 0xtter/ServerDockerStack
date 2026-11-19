@@ -28,6 +28,11 @@ services:
       - prometheus
       - loki
       - postgres
+      - internet
+    environment:
+      - GF_INSTALL_PLUGINS=${GRAFANA_INSTALL_PLUGINS}
+      - GF_FEATURE_TOGGLES_ENABLE=${GRAFANA_FEATURE_TOGGLES_ENABLE}
+      - GF_AUTH_MANAGED_SERVICE_ACCOUNTS_ENABLED=true
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
@@ -61,11 +66,12 @@ services:
     volumes:
       - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/alloy/config:/etc/alloy:ro
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/alloy/data:/var/lib/alloy/data
-      - /var/log:/var/log/host_logs
+      - /var/log:/var/log/host_logs:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - reverse_proxy
       - loki
+      - prometheus
     labels:
       traefik.enable: true
       traefik.docker.network: reverse_proxy
@@ -79,39 +85,46 @@ services:
       traefik.http.services.alloy-service.loadbalancer.server.scheme: http
 
   cadvisor:
-    image: gcr.io/cadvisor/cadvisor:latest
+    image: ghcr.io/google/cadvisor:latest
     container_name: cadvisor
+    privileged: true
+    pid: host
     volumes:
       - /:/rootfs:ro
-      - /run:/run:ro
+      - /var/run:/var/run:rw
       - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /dev/disk/:/dev/disk:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
     devices:
       - /dev/kmsg
-    privileged: true
+    ports:
+      - "8080:8080"
     restart: unless-stopped
-    command: 
+    depends_on:
+      - loki
+      - prometheus
+      - alloy
+    command:
       - --housekeeping_interval=30s
       - --max_housekeeping_interval=35s
-      - --event_storage_event_limit=default=0
-      - --event_storage_age_limit=default=0
       - --store_container_labels=false
       - --global_housekeeping_interval=30s
       - --event_storage_event_limit=default=0
       - --event_storage_age_limit=default=0
-      - --disable_metrics=percpu,process,sched,tcp,udp,disk,diskIO,network # enable only the ones listed
-      - --docker_only # only show stats for docker containers
+      - --disable_metrics=percpu,process,sched,tcp,udp
       - --allow_dynamic_housekeeping=true
       - --storage_duration=1m0s
     networks:
       - prometheus
-    
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     restart: unless-stopped
     user: "0"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--web.enable-remote-write-receiver"
     volumes:
       - ${GENERAL_BASE_DOCKER_STATIC_CONFIG_PATH}/prometheus/config:/etc/prometheus:ro
       - ${GENERAL_BASE_DOCKER_MONITORING_PATH}/logs/prometheus/data:/prometheus

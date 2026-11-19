@@ -162,10 +162,10 @@
         target: _blank
 
 - Other:
-    - Commafeed:
-        icon: commafeed.svg
-        href: https://commafeed.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
-        container: commafeed
+    - Freshrss:
+        icon: freshrss.svg
+        href: https://freshrss.{{HOMEPAGE_VAR_BASE_DOMAIN_NAME}}
+        container: freshrss
         description: RSS reader
         target: _blank
 

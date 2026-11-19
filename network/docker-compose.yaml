@@ -10,7 +10,7 @@ networks:
 
 services:
   wireguard:
-    image: lscr.io/linuxserver/wireguard:1.0.20250521 # fixed version to avoid possibles issues with latest
+    image: lscr.io/linuxserver/wireguard:1.0.20260223 # fixed version to avoid possibles issues with latest
     container_name: wireguard
     restart: unless-stopped
     cap_add:
@@ -99,7 +99,7 @@ services:
   #     - TOKEN=${TRAEFIK_DUCKDNS_TOKEN}
 
   traefik:
-    image: traefik:v3.6
+    image: traefik:v3.7
     container_name: "traefik"
     restart: unless-stopped
     command:
@@ -107,6 +107,8 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--accesslog=true"
+      - "--accesslog.format=json"
       - "--entryPoints.web.address=:80"
       - "--entryPoints.websecure.address=:443"
       - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
@@ -127,6 +129,7 @@ services:
       - MYADDR_PRIVATE_KEYS_MAPPING=${TRAEFIK_SUBDOMAIN_NAME}:${TRAEFIK_MYADDR_IO_TOKEN}
     volumes:
       - ${GENERAL_BASE_DOCKER_DATA_PATH}/letsencrypt:/letsencrypt
+      - ${GENERAL_BASE_DOCKER_DATA_PATH}/traefik/logs:/var/log/traefik
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     healthcheck:
       test: ["CMD", "sh", "-c", "wget -q -O - 'https://myaddr.io/update?key=${TRAEFIK_MYADDR_IO_TOKEN}&ip=${GENERAL_SERVER_LOCAL_ADDRESS}'"] # To update myaddr.io with server private IP
@@ -174,7 +177,6 @@ services:
       # Timezone for accurate log times
       - TZ=${GENERAL_TIMEZONE}
       - FIREWALL_OUTBOUND_SUBNETS=${VPN_LOCAL_SUBNET_RANGE}
-      - DOT=off
     networks:
       - reverse_proxy
       - internet
@@ -230,13 +232,13 @@ services:
       traefik.http.services.bazarr-service.loadbalancer.server.port: 6767
       traefik.http.services.bazarr-service.loadbalancer.server.scheme: http
 
-      # Rule for port 8082 (commafeed)
-      traefik.http.routers.commafeed-router.rule: Host(`commafeed.${TRAEFIK_DOMAIN_NAME}`)
-      traefik.http.routers.commafeed-router.entrypoints: websecure
-      traefik.http.routers.commafeed-router.service: commafeed-service
-      traefik.http.routers.commafeed-router.tls: true
-      traefik.http.services.commafeed-service.loadbalancer.server.port: 8082
-      traefik.http.services.commafeed-service.loadbalancer.server.scheme: http
+      # Rule for Glance
+      traefik.http.routers.glance-router.rule: Host(`glance.${TRAEFIK_DOMAIN_NAME}`)
+      traefik.http.routers.glance-router.entrypoints: websecure
+      traefik.http.routers.glance-router.service: glance-service
+      traefik.http.routers.glance-router.tls: true
+      traefik.http.services.glance-service.loadbalancer.server.port: 8080
+      traefik.http.services.glance-service.loadbalancer.server.scheme: http
 
       # Rule for port 1200 (rsshub)
       traefik.http.routers.rsshub-router.rule: Host(`rsshub.${TRAEFIK_DOMAIN_NAME}`)
