@@ -349,7 +349,7 @@ services:
       traefik.http.services.nextcloud-service.loadbalancer.server.scheme: https
 
   onlyoffice:
-    image: onlyoffice/documentserver:9.4
+    image: onlyoffice/documentserver:10.0
     container_name: onlyoffice
     restart: unless-stopped
     environment:
